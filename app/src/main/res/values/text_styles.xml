@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--字体style-->
+
+    <!--A  -->
+    <style name="Text_A_color1" parent="width_height">
+        <item name="android:textColor">@color/font_color_1</item>
+        <item name="android:textSize">@dimen/size_A</item>
+    </style>
+
+    <style name="Text_A_color2" parent="width_height">
+        <item name="android:textColor">@color/font_color_2</item>
+        <item name="android:textSize">@dimen/size_A</item>
+    </style>
+
+    <style name="Text_A_color3" parent="width_height">
+        <item name="android:textColor">@color/font_color_3</item>
+        <item name="android:textSize">@dimen/size_A</item>
+    </style>
+
+    <style name="Text_A_color5" parent="width_height">
+        <item name="android:textColor">@color/font_color_5</item>
+        <item name="android:textSize">@dimen/size_A</item>
+    </style>
+
+    <!--B  -->
+    <style name="Text_B_color2" parent="width_height">
+        <item name="android:textColor">@color/font_color_2</item>
+        <item name="android:textSize">@dimen/size_B</item>
+    </style>
+
+    <style name="Text_B_color3" parent="width_height">
+        <item name="android:textColor">@color/font_color_3</item>
+        <item name="android:textSize">@dimen/size_B</item>
+    </style>
+
+    <style name="Text_B_color4" parent="width_height">
+        <item name="android:textColor">@color/font_color_4</item>
+        <item name="android:textSize">@dimen/size_B</item>
+    </style>
+
+    <!--C  -->
+    <style name="Text_C_color1" parent="width_height">
+        <item name="android:textColor">@color/font_color_1</item>
+        <item name="android:textSize">@dimen/size_C</item>
+    </style>
+
+    <style name="Text_C_color2" parent="width_height">
+        <item name="android:textColor">@color/text_hint_color</item>
+        <item name="android:textSize">@dimen/size_C</item>
+    </style>
+
+    <style name="Text_C_color3" parent="width_height">
+        <item name="android:textColor">@color/font_color_3</item>
+        <item name="android:textSize">@dimen/size_C</item>
+    </style>
+    <style name="Text_C_color4" parent="width_height">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/size_C</item>
+    </style>
+    <style name="Text_C_color5" parent="width_height">
+        <item name="android:textColor">@color/font_color_5</item>
+        <item name="android:textSize">@dimen/size_C</item>
+    </style>
+
+    <style name="Text_C_color9" parent="width_height">
+        <item name="android:textColor">@color/color_9</item>
+        <item name="android:textSize">@dimen/size_C</item>
+    </style>
+
+    <!--D  -->
+    <style name="Text_D_color1" parent="width_height">
+        <item name="android:textColor">@color/font_color_1</item>
+        <item name="android:textSize">@dimen/size_D</item>
+    </style>
+
+    <style name="Text_D_color3" parent="width_height">
+        <item name="android:textColor">@color/font_color_3</item>
+        <item name="android:textSize">@dimen/size_D</item>
+    </style>
+
+    <style name="Text_D_color4" parent="width_height">
+        <item name="android:textColor">@color/text_sign_in_color</item>
+        <item name="android:textSize">@dimen/size_D</item>
+    </style>
+</resources>

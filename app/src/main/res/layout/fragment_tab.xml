@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/listView"
+                android:overScrollMode="never"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+    <RelativeLayout
+            android:visibility="gone"
+            android:id="@+id/rl_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/base_activity_bg">
+
+        <ImageView
+                android:id="@+id/iv_empty"
+                android:layout_width="@dimen/item_height_120"
+                android:layout_height="@dimen/item_height_120"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/item_height_110"
+                android:src="@drawable/empty_data"/>
+
+        <TextView
+                android:id="@+id/tv_tips"
+                android:layout_width="@dimen/item_height_120"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_empty"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/cui_corners_5"
+                android:gravity="center"
+                android:text="@string/list_empty"
+                android:textColor="@color/text_sign_in_color"
+                android:textSize="18sp"/>
+
+        <TextView
+                android:id="@+id/tv_request_again"
+                android:layout_width="@dimen/item_height_120"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_tips"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/item_height_15"
+                android:gravity="center"
+                android:text="@string/request_again"
+                android:textColor="@color/text_hint_color"
+                android:textSize="16sp"/>
+    </RelativeLayout>
+</RelativeLayout>

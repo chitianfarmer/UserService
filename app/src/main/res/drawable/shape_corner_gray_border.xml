@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:useLevel="false">
+    <solid android:color="@color/white" />
+    <corners android:radius="@dimen/dialog_bg_order_radius" />
+    <stroke
+        android:width="@dimen/cui_stroke_width"
+        android:color="@color/white" />
+
+</shape>

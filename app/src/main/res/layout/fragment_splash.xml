@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/LinearLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/splash_bg">
+
+    <ImageView
+            android:visibility="gone"
+            android:id="@+id/iv_up"
+            android:layout_width="78dp"
+            android:layout_height="78dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="143dp"
+            android:background="@mipmap/ic_launcher"
+            android:scaleType="centerCrop"/>
+    <TextView
+            android:visibility="gone"
+            android:layout_below="@+id/iv_up"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:text="@string/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    <ImageView
+            android:visibility="gone"
+            android:id="@+id/iv_center"
+            android:layout_width="295dp"
+            android:layout_height="86dp"
+            android:layout_below="@+id/iv_up"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="35dp"/>
+
+    <ImageView
+            android:visibility="gone"
+            android:id="@+id/iv_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="187dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>

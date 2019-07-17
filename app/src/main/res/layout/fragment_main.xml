@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/base_activity_bg"
+                android:orientation="vertical">
+
+    <RelativeLayout
+            android:id="@+id/rl_top"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@drawable/bg_main_up">
+
+        <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:text="@string/app_name"
+                android:textColor="@color/white"
+                android:textSize="16sp"/>
+        <LinearLayout
+                android:layout_alignParentBottom="true"
+                android:layout_margin="10dp"
+                android:orientation="vertical"
+                android:background="@drawable/bg_round_white"
+                android:layout_width="match_parent"
+                android:layout_height="80dp">
+            <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tab_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    app:tabSelectedTextColor="@color/green_03b499"
+                    app:tabTextColor="@color/text_sign_in_btn_color"
+                    app:tabIndicatorColor="@color/green_03b499"
+                    app:tabRippleColor="@color/transparent"
+                    app:tabMode="fixed"
+                    android:background="@color/transparent"
+                    app:tabBackground="@color/transparent"
+                    app:tabGravity="center"
+                    app:tabIndicatorHeight="4px"
+                    app:tabIndicatorFullWidth="false"
+                    app:tabIndicatorGravity="bottom"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    app:tabPaddingBottom="@dimen/cui_corners_5"
+                    android:layout_marginRight="@dimen/card_item_margin"
+                    android:layout_marginLeft="@dimen/card_item_margin"
+                    style="@style/CustomTabTextAppearanceStyle"
+                    android:gravity="center"
+                    android:orientation="vertical"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <cn.eakay.service.widget.HackyViewPager
+            android:id="@+id/content_layout"
+            android:layout_width="match_parent"
+            android:background="@color/base_activity_bg"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/slide_view"
+            android:layout_below="@+id/rl_top"/>
+
+    <cn.eakay.service.widget.EakaySlideToUnLockView
+            android:id="@+id/slide_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height"
+            android:layout_alignParentBottom="true"
+            android:background="@color/exit_bg_color"/>
+</RelativeLayout>

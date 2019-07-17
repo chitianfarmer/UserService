@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="colorprimary">#4bc7ff</color>
+    <color name="colorprimarydark">#303f9f</color>
+    <color name="coloraccent">#ff4081</color>
+    <color name="colorprimaryred">#eb3306</color>
+    <color name="secondary_color1">#f3f8fc</color>
+    <color name="secondary_color2">#9ab1ff</color>
+    <color name="secondary_color3">#7bb4ff</color>
+    <color name="secondary_color4">#dde5f0</color>
+    <color name="secondary_color5">#f6ff00</color>
+    <color name="secondary_color6">#00afec</color>
+    <color name="font_color_1">#ffffff</color>
+    <color name="font_color_2">#24baff</color>
+    <color name="font_color_3">#79899c</color>
+    <color name="font_color_4">#97abc5</color>
+    <color name="font_color_5">#c8cfd6</color>
+    <color name="font_color_6">#caeeff</color>
+    <color name="font_color_7">#f5f336</color>
+    <color name="font_color_8">#ff3e64</color>
+    <color name="font_color_9">#6d728c</color>
+    <color name="color_9">#dbb76b</color>
+    <color name="color_10">#0096ff</color>
+    <color name="color_11">#e60000</color>
+    <color name="color_red">#ff0000</color>
+    <color name="color_red_ff">#ffff0000</color>
+    <color name="color_12">#00bf7e</color>
+    <color name="color_13">#ff7070</color>
+    <color name="color_white">#ffffff</color>
+    <color name="color_eakay_blue">#24baff</color>
+    <color name="color_text_black">#6d728c</color>
+    <color name="color_text_black_dark">#b0b8c2</color>
+    <color name="color_text_black_d">#2b2b2b</color>
+
+
+    <color name="color_text_coupon_rental_car">#31c3ff</color>
+    <color name="color_text_coupon_charge">#9ab1ff</color>
+    <color name="color_text_coupon_parking">#6cacff</color>
+    <color name="color_text_coupon_invalid">#ecf1f5</color>
+    <color name="color_text_coupon_invalid_in_white">#c8cfd6</color>
+
+    <!-- 基本颜色 -->
+    <color name="base_activity_bg">#f4f3f8</color>
+    <!--分割线颜色-->
+    <color name="color_div">#edeef0</color>
+
+    <color name="color_title_bar_bg">@color/colorprimary</color>
+    <color name="color_status_bar">@color/color_title_bar_bg</color>
+
+    <color name="color_disable">#dce3ed</color>
+    <!--输入框的hint字体颜色-->
+    <color name="color_hint_text">#97abc5</color>
+    <!-- 二维码扫描 -->
+    <color name="result_view">#b0000000</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="possible_result_points">#c0ffff00</color>
+    <!--订单 相关声明 -->
+    <color name="color_order_declare_text">#97abc5</color>
+    <color name="color_order_yellow_text">#f6ff00</color>
+    <color name="txt_white">#ffffff</color>
+    <color name="bg_light_white">#f1eff6</color>
+    <color name="txt_light_gray">#e6e4e5</color>
+    <color name="white">#fff</color>
+    <color name="ssss">#003366</color>
+
+    <color name="color_route_plan_line">#b2f94f84</color>
+    <color name="color_text_red">#f94f84</color>
+    <!--一元租车-->
+    <color name="color_yellow_one">#fffd38</color>
+    <color name="color_gray_one">#97abc5</color>
+    <color name="color_red_one">#f94f84</color>
+    <color name="color_blue_one">#24baff</color>
+
+
+    <color name="color_text_blue">#ff24baff</color>
+    <color name="color_text_black0">#ff4a4a4a</color>
+    <color name="color_text_gray_light">#ff95deff</color>
+    <color name="color_text_tips">#b1bfd1</color>
+
+    <color name="color_reserve_divider">#ebf1f5</color>
+    <color name="color_reserve_item_bg">#f7fcff</color>
+    <color name="black">#000000</color>
+    <color name="color_bg_pwd_lock_unable">#cff0ff</color>
+    <color name="color_bg_pwd_lock_info">#ff4bc7ff</color>
+    <color name="color_text_hint">#c8cfd6</color>
+
+    <color name="text2">#333333</color>
+    <color name="base_color_blue">#24b8fe</color>
+    <color name="gray_deep">#8d8d8d</color>
+    <color name="red_text">#ff5e5e</color>
+    <color name="color_gray_text">#97abc5</color>
+    <color name="color_gray_bg">#8000</color>
+
+    <color name="color_pay_text_black_bg">#4a4a4a</color>
+    <color name="color_pay_text_gray_bg">#b0b8c2</color>
+    <color name="color_pay_text_blue_bg">#24baff</color>
+
+    <color name="color_tv_agree_hide">#6d728c</color>
+
+    <color name="color_activity_bg">#f6f7f8</color>
+    <color name="color_shape_bt_bg">#13aef5</color>
+
+    <color name="color_place_divider">#e8e8e8</color>
+    <color name="color_place_wire_blue">#13aef5</color>
+
+    <color name="color_text_gray">#9b9b9b</color>
+    <color name="color_text_gray_l">#9a9a9a</color>
+    <color name="color_text_place_black">#4a4a4a</color>
+
+    <color name="color_park_text_gray">#c4c4c4</color>
+    <color name="color_park_text_black">#474747</color>
+
+    <color name="color_auto_wash_open">#31ade5</color>
+    <color name="color_dialog_number_txt">#13aef5</color>
+    <color name="color_yellow_tips">#fff7b518</color>
+    <color name="color_orenge_txt">#ff894d</color>
+
+    <color name="color_network_tab_txt_select">#4da1ff</color>
+    <color name="color_network_tab_txt_defualt">#999999</color>
+    <color name="color_title_goin_blue">#4da1ff</color>
+    <color name="color_text_yellow">#ff8447</color>
+
+    <color name="color_tel_wait_red">#ff5e5e</color>
+
+    <color name="color_tab_indicator_color">#4da1ff</color>
+    <color name="color_tab_text_select_color">#24a1ff</color>
+    <color name="color_tab_text_color">#999999</color>
+
+    <color name="color_text_rtcar_gray">#cccccc</color>
+    <color name="color_text_rtcar_blue">#13aef5</color>
+    <color name="color_text_rtcar_croci">#ff894d</color>
+
+    <color name="color_text_me_yellow">#ffb34d</color>
+    <color name="order_wrning">#f55b23</color>
+
+    <color name="color_price_list_select">#13aef5</color>
+    <color name="navige_color">#afd9ff</color>
+    <color name="tab_text_car_order">#979797</color>
+    <color name="car_order_audio">#f5a623</color>
+    <color name="car_order_left">#50e3c2</color>
+    <color name="car_order_failed">#d0021b</color>
+    <color name="car_order_devider">#f1f1f1</color>
+    <color name="empty_car_order_bg">#f4f3f8</color>
+    <color name="car_number_list_bill">#50e3c2</color>
+    <color name="bill_warning">#fa0000</color>
+    <color name="payment_red">#ee0622</color>
+    <color name="bill_warning_bg">#fdfbd8</color>
+    <color name="schedul_money_text_color">#c2c2c2</color>
+    <color name="detail_car_info_nouser_text">#c8c7c7</color>
+    <color name="car_bottom_bg">#66ffffff</color>
+    <color name="grey_98">#989898</color>
+    <color name="grey_d8">#d8d8d8</color>
+    <color name="grey_c9">#c9c9c9</color>
+    <color name="blue_4a90e2">#4a90e2</color>
+    <color name="blue_4da1ff">#4da1ff</color>
+
+    <bool name="default_circle_indicator_centered">true</bool>
+    <color name="default_circle_indicator_fill_color">#ffffffff</color>
+    <color name="default_circle_indicator_page_color">#00000000</color>
+    <integer name="default_circle_indicator_orientation">0</integer>
+    <dimen name="default_circle_indicator_radius">3dp</dimen>
+    <bool name="default_circle_indicator_snap">false</bool>
+    <color name="default_circle_indicator_stroke_color">#ffdddddd</color>
+    <dimen name="default_circle_indicator_stroke_width">1dp</dimen>
+
+    <dimen name="default_line_indicator_line_width">12dp</dimen>
+    <dimen name="default_line_indicator_gap_width">4dp</dimen>
+    <dimen name="default_line_indicator_stroke_width">1dp</dimen>
+    <color name="default_line_indicator_selected_color">#ff33b5e5</color>
+    <color name="default_line_indicator_unselected_color">#ffbbbbbb</color>
+    <bool name="default_line_indicator_centered">true</bool>
+
+    <dimen name="default_title_indicator_clip_padding">4dp</dimen>
+    <color name="default_title_indicator_footer_color">#ff33b5e5</color>
+    <dimen name="default_title_indicator_footer_line_height">2dp</dimen>
+    <integer name="default_title_indicator_footer_indicator_style">2</integer>
+    <dimen name="default_title_indicator_footer_indicator_height">4dp</dimen>
+    <dimen name="default_title_indicator_footer_indicator_underline_padding">20dp</dimen>
+    <dimen name="default_title_indicator_footer_padding">7dp</dimen>
+    <integer name="default_title_indicator_line_position">0</integer>
+    <color name="default_title_indicator_selected_color">#ffffffff</color>
+    <bool name="default_title_indicator_selected_bold">true</bool>
+    <color name="default_title_indicator_text_color">#bbffffff</color>
+    <dimen name="default_title_indicator_text_size">15dp</dimen>
+    <dimen name="default_title_indicator_title_padding">5dp</dimen>
+    <dimen name="default_title_indicator_top_padding">7dp</dimen>
+
+    <bool name="default_underline_indicator_fades">true</bool>
+    <integer name="default_underline_indicator_fade_delay">300</integer>
+    <integer name="default_underline_indicator_fade_length">400</integer>
+    <color name="default_underline_indicator_selected_color">#ff33b5e5</color>
+    <color name="cui_primary_color">#4bc7ff</color>
+    <color name="cui_primary_secondary_color">#13aef5</color>
+    <color name="cui_bg_color">#f9f9f9</color>
+    <color name="cui_divider_color">#e8e8e8</color>
+    <!--文本颜色-->
+    <!--标题文字颜色-->
+    <color name="cui_heading_text_color_dark">#4a4a4a</color>
+    <color name="cui_heading_text_color_blue">#13aef5</color>
+    <!--正文内容颜色-->
+    <color name="cui_body_text_color">#878787</color>
+    <color name="cui_body_text_color_dark">#4a4a4a</color>
+    <color name="cui_body_secondary_text_color">#d0d0d0</color>
+
+    <!--按钮文本颜色-->
+    <color name="cui_btn_text_color_blue">#13aef5</color>
+    <color name="cui_btn_text_color_white">#ffffff</color>
+
+    <!--提示性文字颜色-->
+    <color name="cui_prompt_text_color_red">#ff5e5e</color>
+    <color name="cui_prompt_text_color_yellow">#f8e81c</color>
+    <!--文本颜色 end-->
+
+    <color name="text_sign_in_color">#312b52</color>
+    <color name="sign_in_bg_color">#27223b</color>
+    <color name="input_bg_color">#352f4b</color>
+    <color name="text_hint_color">#78728e</color>
+    <color name="sign_in_btn_default_color">#0cd6ee</color>
+    <color name="sign_in_register_color">#ffc79e</color>
+    <color name="start_app_text_color">#f9a653</color>
+    <color name="dialog_title_text_color">#2d2d2d</color>
+    <color name="dialog_cancel_text_color">#fa6578</color>
+    <color name="edit_verify_text_hint_color">#cfcfcf</color>
+    <color name="assist_camera_bg_color">#faa</color>
+    <color name="join_level_title_color">#cec8e2</color>
+    <color name="join_level_btn_people_color">#f97383</color>
+    <color name="mask_bg_black">#b3000000</color>
+    <color name="confirm_order_tips_bg_color">#ffdb5f</color>
+    <color name="confirm_order_tips_text_color">#de5142</color>
+    <color name="hint_text_edt_name_color">#c1c1c1</color>
+    <color name="order_payment_bg_color">#f4f8fb</color>
+    <color name="order_payment_dev">#e7edf2</color>
+    <color name="main_tab_bg_color">#2c2742</color>
+    <color name="me_tab_level_bg">#332d4b</color>
+    <color name="tab_home_item_color">#e6332d4b</color>
+    <color name="main_city_mask_bg_color">#99000000</color>
+    <color name="bank_card_text_color">#3f73af</color>
+    <color name="bank_card_error_text_color">#ff0202</color>
+    <color name="green_start">#0cd6ee</color>
+    <color name="green_end">#48d6b6</color>
+    <color name="red_start">#ff937f</color>
+    <color name="red_end">#fa6578</color>
+    <color name="text_progress_color">#00bb91</color>
+    <color name="tab_home_center">#ffbfb3</color>
+    <color name="tab_home_end">#ffc79e</color>
+    <color name="tab_home_start">#ffa6ac</color>
+    <color name="refund_title_color">#9b9b9b</color>
+    <color name="bill_status_color">#f5a623</color>
+    <color name="green_03b499">#03B499</color>
+    <color name="exit_bg_color">#7f312B52</color>
+    <color name="take_order_service_photo_color">#48D7B8</color>
+    <color name="unable_to_serve_color">#f1485d</color>
+    <color name="transparent">#00000000</color>
+
+</resources>

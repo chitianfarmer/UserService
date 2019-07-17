@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/base_activity_bg</item>
+        <!-- Actionbar color -->
+        <item name="colorPrimary">@color/base_activity_bg</item>
+        <!--Status bar color-->
+        <item name="colorPrimaryDark">@color/base_activity_bg</item>
+        <!--Window Background-->
+        <!--<item name="android:windowBackground">@android:color/transparent</item>-->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="actionBarSize">48dp</item>
+
+        <item name="eToolbarStyle">@style/ToolbarStyle.GrayBg</item>
+
+        <!--Toolbar menu按钮文字的颜色-->
+        <item name="actionMenuTextColor">@color/color_text_black_dark</item>
+        <!--Toolbar 更多按钮，注意是那种点击能弹出popup的按钮-->
+        <item name="actionOverflowButtonStyle">@style/ActionButton.Overflow.Light</item>
+    </style>
+</resources>

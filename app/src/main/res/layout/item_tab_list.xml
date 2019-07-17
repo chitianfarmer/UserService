@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/bg_round_white"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_service_time"
+                android:layout_width="96dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center|right"
+                android:gravity="center|right"
+                android:text="@string/appointment_service_time"
+                android:textColor="@color/text_sign_in_color"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center|left"
+                android:layout_marginLeft="15dp"
+                android:gravity="center|left"
+                android:maxLines="1"
+                android:textColor="@color/color_text_gray"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_service_address"
+                android:layout_width="96dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center|right|top"
+                android:gravity="center|right|top"
+                android:text="@string/home_service_address"
+                android:textColor="@color/text_sign_in_color"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|left|top"
+                android:layout_marginLeft="15dp"
+                android:gravity="center|left|top"
+                android:textColor="@color/color_text_gray"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="96dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center|right"
+                android:gravity="center|right"
+                android:text="@string/order_number"
+                android:textColor="@color/text_sign_in_color"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_order_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|left"
+                android:layout_marginLeft="15dp"
+                android:gravity="center|left"
+                android:maxLines="1"
+                android:textColor="@color/color_text_gray"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="96dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center|right"
+                android:gravity="center|right"
+                android:text="@string/order_status"
+                android:textColor="@color/text_sign_in_color"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_order_status"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center|left"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:gravity="center|left"
+                android:maxLines="1"
+                android:text="@string/see_the_details_page_status"
+                android:textColor="@color/car_order_audio"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/iv_order_type"
+                android:layout_width="37dp"
+                android:layout_height="23dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/appointment_icon" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

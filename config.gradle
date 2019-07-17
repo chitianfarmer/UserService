@@ -1,0 +1,65 @@
+ext {
+    android = [
+            compileSdkVersion: 28,
+            buildToolsVersion: "28.0.3",
+            applicationId    : "cn.eakay.service",
+            minSdkVersion    : 15,
+            targetSdkVersion : 28,
+            versionCode      : 1,
+            versionName      : "1.0.0",
+            multiDexEnabled  : true
+    ]
+
+    dependencies = [
+            //androidx appcompat
+            appcompat             : 'androidx.appcompat:appcompat:1.0.2',
+            //design
+            design                : 'com.google.android.material:material:1.0.0',
+            //V4
+            v4                    : 'androidx.legacy:legacy-support-v4:1.0.0',
+            //recyclerView
+            recyclerView          : 'androidx.recyclerview:recyclerview:1.0.0',
+            //constraintLayout
+            constraintLayout      : 'androidx.constraintlayout:constraintlayout:1.1.2',
+            //androidx core
+            core_ktx              : 'androidx.core:core-ktx:1.0.2',
+            //rxJava
+            rxJava                : 'io.reactivex.rxjava2:rxjava:2.2.10',
+            //rxAndroid
+            rxAndroid             : 'io.reactivex.rxjava2:rxandroid:2.1.1',
+            //rxKotlin
+            rxKotlin              : 'io.reactivex.rxjava2:rxkotlin:2.3.0',
+            //Retrofit
+            retrofit              : 'com.squareup.retrofit2:retrofit:2.6.0',
+            //converter-gson
+            converter_gson        : 'com.squareup.retrofit2:converter-gson:2.6.0',
+            //adapter rxJava2
+            adapter_rxJava        : 'com.squareup.retrofit2:adapter-rxjava2:2.6.0',
+            //logging interceptor
+            log_interceptor       : 'com.squareup.okhttp3:logging-interceptor:4.0.0',
+            //rxLifeCycle Kotlin
+            rxLifeCycle_Kotlin    : 'com.trello.rxlifecycle3:rxlifecycle-kotlin:3.0.0',
+            //rxLifeCycle Components
+            rxLifeCycle_Components: 'com.trello.rxlifecycle3:rxlifecycle-components:3.0.0',
+            //分包
+            multidex              : 'androidx.multidex:multidex:2.0.0',
+            //viewPager
+            magic_viewpager       : 'com.zhy:magic-viewpager:1.0.1',
+            //banner图
+            banner                : 'com.youth.banner:banner:1.4.10',
+            //EventBus
+            eventbus              : 'org.greenrobot:eventbus:3.1.1',
+            //nineOldAndroids
+            nineoldandroids       : 'com.nineoldandroids:library:2.4.0',
+            //viewanimator
+            animator              : 'com.github.florent37:viewanimator:1.0.0@aar',
+            //fastJson
+            fastjson              : 'com.alibaba:fastjson:1.1.70.android',
+            //luban
+            luban                 : 'top.zibin:Luban:1.1.8',
+            //SmartRefreshLayout
+            smartRefresh          : 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-andx-11',
+            //smartRefreshHeader
+            smartHeader           : 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-andx-11'
+    ]
+}

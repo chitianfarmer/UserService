@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_tab_icon"
+        android:layout_width="71dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:scaleType="fitCenter"
+        android:maxHeight="@dimen/item_height_50"
+        android:src="@drawable/pending" />
+
+    <TextView
+        android:id="@+id/tv_tab_title"
+        android:layout_width="wrap_content"
+        android:layout_height="17dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="3dp"
+        android:gravity="center"
+        android:maxWidth="71dp"
+        android:text="@string/pending"
+        android:textColor="@color/text_tab_color"
+        android:textSize="12sp" />
+</LinearLayout>

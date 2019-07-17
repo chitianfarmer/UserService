@@ -1,0 +1,118 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    defaultConfig {
+        applicationId rootProject.ext.android.applicationId
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
+        multiDexEnabled rootProject.ext.android.multiDexEnabled
+        javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
+    aaptOptions {
+        cruncherEnabled = false
+        useNewCruncher = false
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("eakay.jks")
+            storePassword "eakay666"
+            keyAlias "rentcareakay"
+            keyPassword "eakay666"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.release
+        }
+    }
+
+
+    flavorDimensions "environment"
+    productFlavors {
+
+        simulation {
+            dimension "environment"
+            buildConfigField "String", "URL_HOST", "\"https://preuag.eakay.cn/\""
+        }
+
+        pro {
+            dimension "environment"
+            buildConfigField "String", "URL_HOST", "\"https://uag.eakay.cn/\""
+        }
+    }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "EakayAfterService_${variant.versionName}.apk"
+        }
+    }
+    useLibrary 'org.apache.http.legacy'
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation rootProject.ext.dependencies["appcompat"]
+    implementation rootProject.ext.dependencies["core_ktx"]
+    implementation rootProject.ext.dependencies["design"]
+    implementation rootProject.ext.dependencies["v4"]
+    implementation rootProject.ext.dependencies["recyclerView"]
+    implementation rootProject.ext.dependencies["constraintLayout"]
+    //请求相关
+    //rxJava
+    implementation rootProject.ext.dependencies["rxJava"]
+    implementation rootProject.ext.dependencies["rxAndroid"]
+    implementation rootProject.ext.dependencies["rxKotlin"]
+    //retrofit
+    implementation rootProject.ext.dependencies["retrofit"]
+    implementation rootProject.ext.dependencies["converter_gson"]
+    implementation rootProject.ext.dependencies["adapter_rxJava"]
+    implementation rootProject.ext.dependencies["log_interceptor"]
+    //生命周期相关
+    implementation rootProject.ext.dependencies["rxLifeCycle_Kotlin"]
+    implementation rootProject.ext.dependencies["rxLifeCycle_Components"]
+    //multidex
+    implementation rootProject.ext.dependencies["multidex"]
+    //    banner图
+    implementation rootProject.ext.dependencies["banner"]
+    //EventBus
+    implementation rootProject.ext.dependencies["eventbus"]
+    //nineoldandroids
+    implementation rootProject.ext.dependencies["nineoldandroids"]
+    //animator
+    implementation rootProject.ext.dependencies["animator"]
+    //fastJson
+    implementation rootProject.ext.dependencies["fastjson"]
+    //luban
+    implementation rootProject.ext.dependencies["luban"]
+    //smartRefreshLayout
+    implementation rootProject.ext.dependencies["smartRefresh"]
+    //smartRefreshHeader
+    implementation rootProject.ext.dependencies["smartHeader"]
+}

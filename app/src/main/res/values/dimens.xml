@@ -1,0 +1,88 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="activity_horizontal_margin">15dp</dimen>
+    <dimen name="activity_vertical_margin">15dp</dimen>
+    <dimen name="size_A">12sp</dimen>
+    <dimen name="size_B">13sp</dimen>
+    <dimen name="size_Bb">14sp</dimen>
+    <dimen name="size_C">15sp</dimen>
+    <dimen name="size_D">16sp</dimen>
+    <dimen name="size_E">18sp</dimen>
+    <dimen name="size_F">20sp</dimen>
+    <!--分割线-->
+    <dimen name="divider_size">1dp</dimen>
+
+    <!--圆角角度-->
+    <dimen name="corners">6dp</dimen>
+
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!--高大上那些页的输入框的高度-->
+    <dimen name="input_text_height_about_account">42dp</dimen>
+
+    <dimen name="preference_item_height">45dp</dimen>
+    <dimen name="item_height_10">10dp</dimen>
+    <dimen name="item_height_15">15dp</dimen>
+    <dimen name="item_height_20">20dp</dimen>
+    <dimen name="item_height_25">25dp</dimen>
+    <dimen name="item_height_30">30dp</dimen>
+    <dimen name="item_height_35">35dp</dimen>
+    <dimen name="item_height">40dp</dimen>
+    <dimen name="item_height_48">48dp</dimen>
+    <dimen name="item_height_50">50dp</dimen>
+    <dimen name="item_height_55">55dp</dimen>
+    <dimen name="item_height_60">60dp</dimen>
+    <dimen name="item_height_65">65dp</dimen>
+    <dimen name="item_height_70">70dp</dimen>
+    <dimen name="item_height_75">75dp</dimen>
+    <dimen name="item_height_80">80dp</dimen>
+    <dimen name="item_height_85">85dp</dimen>
+    <dimen name="item_height_90">90dp</dimen>
+    <dimen name="item_height_95">95dp</dimen>
+    <dimen name="item_height_100">100dp</dimen>
+    <dimen name="item_height_110">110dp</dimen>
+    <dimen name="item_height_120">120dp</dimen>
+    <dimen name="item_height_130">130dp</dimen>
+    <dimen name="item_height_140">140dp</dimen>
+    <dimen name="item_height_150">150dp</dimen>
+    <dimen name="item_height_160">160dp</dimen>
+    <dimen name="item_height_170">170dp</dimen>
+    <dimen name="item_height_180">180dp</dimen>
+    <dimen name="item_height_190">190dp</dimen>
+    <dimen name="item_height_200">200dp</dimen>
+    <dimen name="item_height_210">210dp</dimen>
+    <dimen name="item_height_220">220dp</dimen>
+    <dimen name="item_height_230">230dp</dimen>
+    <dimen name="item_height_240">240dp</dimen>
+    <dimen name="item_height_245">245dp</dimen>
+    <dimen name="item_height_250">250dp</dimen>
+    <dimen name="item_height_260">260dp</dimen>
+    <dimen name="item_height_270">270dp</dimen>
+    <dimen name="item_height_280">280dp</dimen>
+    <dimen name="item_height_290">290dp</dimen>
+    <dimen name="item_height_300">300dp</dimen>
+    <dimen name="item_height_350">350dp</dimen>
+    <dimen name="item_height_400">400dp</dimen>
+    <dimen name="item_height_450">450dp</dimen>
+    <dimen name="item_height_500">500dp</dimen>
+    <!-- Cling -->
+    <dimen name="clingPunchThroughGraphicCenterRadius">33dp</dimen>
+    <!-- The offset for the text in the cling -->
+    <dimen name="cling_text_block_offset_x">0dp</dimen>
+    <dimen name="cling_text_block_offset_y">0dp</dimen>
+    <dimen name="reveal_radius">30dp</dimen>
+    <dimen name="card_item_margin">10dip</dimen>
+    <dimen name="dialog_text_margin">15dp</dimen>
+    <dimen name="toolbar_margin_top">0dp</dimen>
+    <dimen name="dialog_bg_order_radius">20dip</dimen>
+    <dimen name="cui_divider_size">0.5dp</dimen>
+    <dimen name="cui_stroke_width">0.5dp</dimen>
+    <dimen name="cui_corners">2dp</dimen>
+    <dimen name="cui_corners_5">5dp</dimen>
+
+    <dimen name="cui_title_bar_title_text_size">18sp</dimen>
+    <dimen name="cui_heading_text_size">16sp</dimen>
+    <dimen name="cui_body_text_size">14sp</dimen>
+    <dimen name="cui_body_secondary_text_size">12sp</dimen>
+
+
+</resources>

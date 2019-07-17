@@ -1,0 +1,232 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="txt_lab_msg" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/red_text</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+    <style name="txt_lab_hint" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/text_hint_color</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/base_activity_bg</item>
+        <item name="colorPrimaryDark">@color/base_activity_bg</item>
+        <item name="colorAccent">@color/base_activity_bg</item>
+        <item name="actionBarSize">48dp</item>
+        <item name="eToolbarStyle">@style/ToolbarStyle.GrayBg</item>
+        <!--Toolbar menu按钮文字的颜色-->
+        <item name="actionMenuTextColor">@color/color_text_black_dark</item>
+        <!--Toolbar 更多按钮，注意是那种点击能弹出popup的按钮-->
+        <item name="actionOverflowButtonStyle">@style/ActionButton.Overflow.Dark</item>
+    </style>
+
+    <style name="ToolbarStyle_InLayout">
+        <item name="android:id">@id/toolbar</item>
+        <item name="android:background">@color/empty_car_order_bg</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+    </style>
+
+    <style name="ToolbarStyle_InLayout.noback">
+        <item name="android:id">@id/toolbar</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="navigationIcon">@null</item>
+        <item name="titleview_center">true</item>
+        <item name="titleTextAppearance">@style/TextAppearance.Toolbar.Title.Black</item>
+    </style>
+
+    <style name="ToolbarStyle_InLayout.numal">
+        <item name="android:id">@id/toolbar</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:layout_height">48dp</item>
+    </style>
+
+    <!--Dialog背景-->
+    <style name="dialog_router">
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+    <!--Dialog-->
+    <style name="Dialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowEnterAnimation">@null</item>
+        <item name="android:windowExitAnimation">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="width_height">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <!--时间弹窗-->
+    <style name="time_dialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+    <!--Button样式 start-->
+    <style name="Button" parent="@android:style/Widget.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+    <!-- 白底蓝边按钮 -->
+    <style name="BtnWhiteBg" parent="Button">
+        <item name="android:textColor">@color/text_sign_in_color</item>
+        <item name="android:background">@drawable/bg_sign_in_btn_selector</item>
+    </style>
+    <!--底部弹出动画-->
+    <style name="Animations_BottomPush">
+        <item name="android:windowEnterAnimation">@anim/pw_push_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/pw_push_bottom_out</item>
+    </style>
+    <!--webview标题的样式-->
+    <style name="ToolbarStyle_InLayout_webView">
+        <item name="android:id">@id/toolbar</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+    </style>
+    <!--自定义相机-->
+    <style name="AssistCameraTheme" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <!--自定义拍照-->
+    <style name="ActivityDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="fillColor">@color/color_eakay_blue</item>
+        <item name="centered">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+
+
+    <style name="ToolbarStyle" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="titleview_center">true</item>
+    </style>
+
+    <style name="ToolbarStyle.GrayBg">
+        <item name="android:background">@color/empty_car_order_bg</item>
+        <item name="navigationIcon">@drawable/icon_navi_back_black</item>
+        <item name="actionOverflowButtonStyle">@style/ActionButton.Overflow.Dark</item>
+        <item name="titleTextAppearance">@style/TextAppearance.Toolbar.Title.Black</item>
+    </style>
+
+    <style name="ToolbarStyle.BlueBg">
+        <item name="android:background">@color/color_eakay_blue</item>
+        <item name="navigationIcon">@drawable/icon_navi_back_black</item>
+        <item name="titleTextAppearance">@style/TextAppearance.Toolbar.Title.White</item>
+    </style>
+    <!--Toolbar上主标题的样式-->
+    <style name="TextAppearance.Toolbar.Title.White" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/color_white</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="ActionButton.Overflow.Dark" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_more_dark</item>
+    </style>
+
+
+    <style name="TextAppearance.Toolbar.Title.Black" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+    <!--Toolbar上【更多】按钮样式-->
+    <style name="ActionButton.Overflow.Light" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_more</item>
+    </style>
+
+    <style name="ToolbarStyle.TransparentBg">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="navigationIcon">@drawable/ic_navi_back</item>
+        <item name="titleTextAppearance">@style/TextAppearance.Toolbar.Title.White</item>
+    </style>
+
+    <!--透明Toolbar的主题样式-->
+    <style name="AppTheme.TransparentToolbar">
+        <!--Status bar color-->
+        <item name="colorPrimaryDark">@color/color_status_bar</item>
+        <item name="eToolbarStyle">@style/ToolbarStyle.TransparentBg</item>
+        <!--Toolbar 更多按钮，注意是那种点击能弹出popup的按钮-->
+        <item name="actionOverflowButtonStyle">@style/ActionButton.Overflow.Light</item>
+    </style>
+    <!--基础的主题-->
+    <style name="AppBaseTheme" parent="AppTheme.FullScreenTransparentStatusBar">
+        <item name="android:windowBackground">@color/base_activity_bg</item>
+    </style>
+
+    <style name="Transparent" parent="AppTheme.TransparentToolbar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowAnimationStyle">@style/Animation.Activity.NoAnimation</item>
+    </style>
+
+    <style name="Animation.Activity" parent="@android:style/Animation.Activity" />
+
+    <style name="Animation.Activity.NoAnimation">
+        <item name="android:activityOpenEnterAnimation">@null</item>
+        <item name="android:activityOpenExitAnimation">@null</item>
+        <item name="android:activityCloseEnterAnimation">@null</item>
+        <item name="android:activityCloseExitAnimation">@null</item>
+        <item name="android:taskOpenEnterAnimation">@null</item>
+        <item name="android:taskOpenExitAnimation">@null</item>
+        <item name="android:taskCloseEnterAnimation">@null</item>
+        <item name="android:taskCloseExitAnimation">@null</item>
+        <item name="android:taskToFrontEnterAnimation">@null</item>
+        <item name="android:taskToFrontExitAnimation">@null</item>
+        <item name="android:taskToBackEnterAnimation">@null</item>
+        <item name="android:taskToBackExitAnimation">@null</item>
+        <item name="android:wallpaperOpenEnterAnimation">@null</item>
+        <item name="android:wallpaperOpenExitAnimation">@null</item>
+        <item name="android:wallpaperCloseEnterAnimation">@null</item>
+        <item name="android:wallpaperCloseExitAnimation">@null</item>
+        <item name="android:wallpaperIntraOpenEnterAnimation">@null</item>
+        <item name="android:wallpaperIntraOpenExitAnimation">@null</item>
+        <item name="android:wallpaperIntraCloseEnterAnimation">@null</item>
+        <item name="android:wallpaperIntraCloseExitAnimation">@null</item>
+        <item name="android:fragmentOpenEnterAnimation" tools:ignore="NewApi">@null</item>
+        <item name="android:fragmentOpenExitAnimation" tools:ignore="NewApi">@null</item>
+        <item name="android:fragmentCloseEnterAnimation" tools:ignore="NewApi">@null</item>
+        <item name="android:fragmentCloseExitAnimation" tools:ignore="NewApi">@null</item>
+        <item name="android:fragmentFadeEnterAnimation" tools:ignore="NewApi">@null</item>
+        <item name="android:fragmentFadeExitAnimation" tools:ignore="NewApi">@null</item>
+    </style>
+
+    <!--欢迎页-->
+    <style name="SplashTheme" parent="AppTheme.FullScreenTransparentStatusBar">
+        <item name="android:windowBackground">@color/base_activity_bg</item>
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+    <style name="CustomTabTextAppearanceStyle" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="Anim_style" parent="android:Theme.NoTitleBar.Fullscreen">
+        <item name="android:windowAnimationStyle">@style/AnimFade</item>
+    </style>
+
+    <style name="AnimFade" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/fade_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/hold</item>
+        <item name="android:activityCloseExitAnimation">@anim/fade_out</item>
+    </style>
+
+</resources>
