@@ -23,7 +23,7 @@ object ToastUtils {
         }
     }
 
-     fun showToast(msg: String) {
+     private fun showToast(msg: String) {
         if (toast == null) {
             toast = Toast.makeText(EakayApplication.instance!!, msg, Toast.LENGTH_SHORT)
         }
@@ -31,7 +31,7 @@ object ToastUtils {
         toast!!.apply { show() }
     }
 
-     fun showToast(msg: Int) {
+     private fun showToast(msg: Int) {
         if (toast == null) {
             toast = Toast.makeText(EakayApplication.instance!!, msg, Toast.LENGTH_SHORT)
         }

@@ -25,6 +25,9 @@ interface ApiService {
     @POST("auth/getToken")
     fun checkNoLoginAuthToken(@Body body: RequestBody): Observable<AuthTokenBean>
 
+    @POST("auth/getToken")
+    fun refreshLoginAuthToken(@Body body: RequestBody): Observable<AuthTokenBean>
+
     @POST("auth/app/initializeDevice")
     fun getDeviceToken(@Body body: RequestBody): Observable<DeviceTokenBean>
 }

@@ -1,10 +1,16 @@
 package cn.eakay.service.network
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.os.Looper
+import android.text.TextUtils
+import android.util.Log
 import cn.eakay.service.R
 import cn.eakay.service.base.Constants
 import cn.eakay.service.base.EakayApplication
 import cn.eakay.service.beans.OtherLoginMessage
+import cn.eakay.service.main.MainActivity
+import cn.eakay.service.utils.ErrorManager
 import cn.eakay.service.utils.SecurityUtils
 import cn.eakay.service.utils.StringUtils
 import com.alibaba.fastjson.JSONObject
@@ -35,10 +41,15 @@ class TokenInterceptor : Interceptor {
         val newRequest = getNewRequest(oldRequest, false)
         var response = chain.proceed(newRequest)
         val body = response.body
-        val resp = body?.bytes()
-        val string = resp.toString()
-        val jsonObject = JSONObject.parseObject(string)
-        when (jsonObject.getString(Constants.KEY_REQUEST_ERROR_CODE)) {
+        val resp = body?.string()
+        val result = resp.toString()
+        val jsonObject = JSONObject.parseObject(result)
+        val errorCode = jsonObject.getString(Constants.KEY_REQUEST_ERROR_CODE)
+        val errorMSg = jsonObject.getString(Constants.KEY_REQUEST_ERROR_MSG)
+        when (errorCode) {
+            Constants.KEY_REQUEST_SUCCESSED_CODE -> {
+                response = chain.proceed(newRequest)
+            }
             Constants.KEY_REQUEST_LOGIN_OTHER_CODE -> {
                 EventBus.getDefault().post(
                     OtherLoginMessage(
@@ -52,6 +63,9 @@ class TokenInterceptor : Interceptor {
                 refreshToken()
                 val build = getNewRequest(oldRequest, true)
                 response = chain.proceed(build)
+            }
+            else -> {
+                ErrorManager.checkResultError(errorCode, errorMSg)
             }
         }
         return response
@@ -80,36 +94,40 @@ class TokenInterceptor : Interceptor {
 
     @SuppressLint("CheckResult")
     private fun refreshToken() {
-        val deviceToken = LSPUtils.get(Constants.KEY_DEVICE_TOKEN, "")
+        Looper.prepare()
         val timeMillis = System.currentTimeMillis()
         val param = JSONObject()
         param["appId"] = Constants.APP_KEY
         param["secret"] = Constants.APP_SECRET
         param["timestamp"] = timeMillis
-        param["deviceToken"] = deviceToken
-        param["sign"] = SecurityUtils.MD5(Constants.APP_KEY + Constants.APP_SECRET + timeMillis)
+        val deviceToken = LSPUtils.get(Constants.KEY_DEVICE_TOKEN, "")
+        if (deviceToken.isNotEmpty()) {
+            param["deviceToken"] = deviceToken
+        }
+        param["sign"] =
+            SecurityUtils.MD5(Constants.APP_KEY + Constants.APP_SECRET + (if (TextUtils.isEmpty(deviceToken)) "" else deviceToken) + timeMillis)
         val body = StringUtils.createBody(param)
-        val authToken = ApiUtils.instance.service.checkNoLoginAuthToken(body)
+        val authToken = ApiUtils.instance.service.refreshLoginAuthToken(body)
         authToken.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ result ->
-                val errCode = result.getErrCode()
-                val errMsg = result.getErrMsg()
-                val accessToken = result.getAccessToken()
+                val errCode = result.errCode
+                val errMsg = result.errMsg
+                val accessToken = result.accessToken
                 when (errCode) {
                     "0" -> {
                         token = accessToken
                         LSPUtils.put(Constants.KEY_AUTN_TOKEN, accessToken)
+                        LogUtils.loge("token过期时刷新的Token：$accessToken")
                     }
                     else -> {
                         LogUtils.loge("请求失败，错误码：$errCode，错误信息：$errMsg")
                     }
                 }
             }, { error ->
-                run {
-                    val message = error.message
-                    LogUtils.loge("请求失败：$message")
-                }
+                val message = error.message
+                LogUtils.loge("token过期时刷新Token请求失败：$message")
             })
+        Looper.loop()
     }
 }

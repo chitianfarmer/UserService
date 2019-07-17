@@ -2,6 +2,7 @@ package cn.eakay.service.network
 
 import android.text.TextUtils
 import cn.eakay.service.base.Constants
+import cn.eakay.service.utils.StringUtils
 import com.alibaba.fastjson.JSONObject
 import com.changyoubao.vipthree.base.LSPUtils
 import okhttp3.*
@@ -28,7 +29,7 @@ class HeaderInterceptor : Interceptor {
         builder.addHeader("Accept", Constants.DATA_FORMAT)
         builder.addHeader("Content-Type", Constants.DATA_FORMAT)
         builder.addHeader("appId", Constants.APP_KEY)
-        if (!TextUtils.isEmpty(token)) {
+        if (token.isNotEmpty()) {
             builder.addHeader(Constants.KEY_REQUEST_ACCESS_TOKEN, token)
         }
         return chain.proceed(methodPost(request, builder))
@@ -43,7 +44,7 @@ class HeaderInterceptor : Interceptor {
                 for (i in 0 until oldBody!!.size) {
                     jsonObject[oldBody.encodedName(i)] = oldBody.encodedValue(i)
                 }
-                requestBody = RequestBody.create(mediaType, jsonObject.toJSONString())
+                requestBody = StringUtils.createBody(jsonObject)
             }
         }
         return builder.post(requestBody!!).build()

@@ -9,18 +9,14 @@ import cn.eakay.service.base.BaseFragment
 import cn.eakay.service.base.Constants
 import cn.eakay.service.main.MainActivity
 import cn.eakay.service.network.ApiUtils
-import cn.eakay.service.network.RequestCallback
 import cn.eakay.service.sign.SignInActivity
 import cn.eakay.service.utils.SecurityUtils
 import cn.eakay.service.utils.StringUtils
 import com.alibaba.fastjson.JSONObject
-import com.baidu.android.common.security.MD5Util
 import com.changyoubao.vipthree.base.LSPUtils
 import com.shs.easywebviewsupport.utils.LogUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody
 
 /**
  * @packageName: UserService
@@ -88,22 +84,20 @@ class SplashFragment : BaseFragment() {
             authToken.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
-                    val errCode = result.getErrCode()
-                    val errMsg = result.getErrMsg()
-                    val accessToken = result.getAccessToken()
+                    val errCode = result.errCode
+                    val errMsg = result.errMsg
+                    val accessToken = result.accessToken
                     when (errCode) {
                         "0" -> {
                             LSPUtils.put(Constants.KEY_AUTN_TOKEN, accessToken)
                         }
                         else -> {
-                            LogUtils.loge("请求失败，错误码：$errCode，错误信息：$errMsg")
+                            LogUtils.loge("获取token请求失败，错误码：$errCode，错误信息：$errMsg")
                         }
                     }
                 }, { error ->
-                    run {
-                        val message = error.message
-                        LogUtils.loge("请求失败：$message")
-                    }
+                    val message = error.message
+                    LogUtils.loge("获取token请求失败：$message")
                 })
         }
     }

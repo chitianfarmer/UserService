@@ -11,7 +11,9 @@ import android.text.SpannableString
 import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import cn.eakay.service.R
+import cn.eakay.service.base.Constants
 import com.alibaba.fastjson.JSONObject
+import com.changyoubao.vipthree.base.LSPUtils
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import java.io.UnsupportedEncodingException
@@ -1134,6 +1136,18 @@ object StringUtils {
     }
 
     fun createBody(param: JSONObject): RequestBody {
+        if (!param.containsKey(Constants.KEY_REQUEST_DEVICE_TOKEN)) {
+            val deviceToken = LSPUtils.get(Constants.KEY_DEVICE_TOKEN, "")
+            if (deviceToken.isNotEmpty()) {
+                param[Constants.KEY_REQUEST_DEVICE_TOKEN] = deviceToken
+            }
+        }
+        if (!param.containsKey(Constants.KEY_REQUEST_ACCESS_TOKEN)) {
+            val accessToken = LSPUtils.get(Constants.KEY_AUTN_TOKEN, "")
+            if (accessToken.isNotEmpty()) {
+                param[Constants.KEY_REQUEST_ACCESS_TOKEN] = accessToken
+            }
+        }
         return RequestBody.create("application/json; charset=utf-8".toMediaTypeOrNull()!!, param.toJSONString())
     }
 
