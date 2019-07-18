@@ -2,6 +2,7 @@ package cn.eakay.service.tabs
 
 import cn.eakay.service.base.BasePresenter
 import cn.eakay.service.base.BaseView
+import cn.eakay.service.beans.TabOrderListBean
 import com.alibaba.fastjson.JSONObject
 
 /**
@@ -38,20 +39,6 @@ interface TabContract {
         fun showListView()
 
         /**
-         * set whether you can load more
-         *
-         * @param enable
-         */
-        fun setLoadMoreEnable(enable: Boolean)
-
-        /**
-         * set whether it can be pulled down and refreshed
-         *
-         * @param enable
-         */
-        fun setRefreshEnable(enable: Boolean)
-
-        /**
          * stop refreshing
          */
         fun stopRefresh()
@@ -66,7 +53,7 @@ interface TabContract {
          *
          * @param arrayList
          */
-        fun updateListView(arrayList: List<JSONObject>)
+        fun updateListView(arrayList: List<TabOrderListBean.OrderBean>)
     }
 
     /**
@@ -79,7 +66,7 @@ interface TabContract {
          *
          * @return
          */
-        fun getLists(): List<JSONObject>
+        fun getLists(): List<TabOrderListBean.OrderBean>
 
         /**
          * request data from service
@@ -94,11 +81,11 @@ interface TabContract {
          * @param position
          * @param object
          */
-        fun onItemClick(position: Int, bean: JSONObject)
+        fun onItemClick(position: Int, bean: TabOrderListBean.OrderBean)
 
         /**
          * on list item long click
          */
-        fun onLongClick(position: Int, bean: JSONObject)
+        fun onLongClick(position: Int, bean: TabOrderListBean.OrderBean)
     }
 }

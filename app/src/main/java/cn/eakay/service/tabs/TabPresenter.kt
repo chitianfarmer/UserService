@@ -1,10 +1,18 @@
 package cn.eakay.service.tabs
 
-import android.content.Context
+import android.annotation.SuppressLint
 import cn.eakay.service.R
 import cn.eakay.service.base.Constants
+import cn.eakay.service.beans.TabOrderListBean
+import cn.eakay.service.network.ApiUtils
+import cn.eakay.service.network.ResultListener
+import cn.eakay.service.network.ResultObserver
+import cn.eakay.service.utils.ErrorManager
 import cn.eakay.service.utils.StringUtils
 import com.alibaba.fastjson.JSONObject
+import com.shs.easywebviewsupport.utils.LogUtils
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.util.ArrayList
 
 /**
@@ -19,17 +27,17 @@ import java.util.ArrayList
 class TabPresenter : TabContract.Presenter {
 
     private var view: TabContract.View? = null
-    private var objectList: MutableList<JSONObject>? = ArrayList<JSONObject>()
+    private var objectList: MutableList<TabOrderListBean.OrderBean>? = ArrayList<TabOrderListBean.OrderBean>()
 
-    override fun getLists(): MutableList<JSONObject> {
+    override fun getLists(): MutableList<TabOrderListBean.OrderBean> {
         if (objectList == null) {
             objectList = ArrayList()
         }
         return objectList!!
     }
 
+    @SuppressLint("CheckResult")
     override fun requestData(page: Int) {
-//        val activity = view?.getBaseActivity() ?: return
         val type = view?.getIntentType()
         view?.showLoadDialog()
         val obj = JSONObject()
@@ -46,76 +54,84 @@ class TabPresenter : TabContract.Presenter {
         } else if (type == Constants.NUMBER_FOUR) {
             obj["orderStatus"] = "1"
         }
-        if (objectList!!.size > Constants.NUMBER_ZERO) {
-            objectList!!.clear()
-        }
-        for (index in Constants.NUMBER_ZERO..Constants.NUMBER_TWELVE) {
-            val jsonObject = JSONObject()
-            objectList!!.add(jsonObject)
-            view?.updateListView(objectList!!)
-        }
-//        val params = StringUtils.getListParams(page, Constants.PAGE_SIZE, obj)
-//        NetAppActionImpl.getInstance().getOrderList(activity, params, object : CallBack<OrderListBean>() {
-//            fun onSuccess(context: Context, response: OrderListBean) {
-//                view?.hintLoadDialog()
-//                val beans = response.getDatas()
-//                if (beans != null && beans!!.size != Constants.NUMBER_ZERO) {
-//                    view?.showListView()
-//                    if (page == Constants.PAGE_COUNT) {
-//                        objectList!!.clear()
-//                        view?.stopRefresh()
-//                    } else {
-//                        view?.stopLoadMore()
-//                    }
-//                    objectList!!.addAll(beans!!)
-//                    view?.updateListView(objectList)
-//                    if (beans!!.size < Constants.PAGE_SIZE) {
-//                        view?.setLoadMoreEnable(false)
-//                        view?.setRefreshEnable(true)
-//                    } else {
-//                        view?.setLoadMoreEnable(true)
-//                        view?.setRefreshEnable(true)
-//                    }
-//                } else {
-//                    if (page == Constants.PAGE_COUNT) {
-//                        objectList!!.clear()
-//                        view?.stopRefresh()
-//                        view?.showEmptyView()
-//                    } else {
-//                        view?.stopLoadMore()
-//                        view?.toast(R.string.already_in_the_end)
-//                    }
-//                    view?.setLoadMoreEnable(false)
-//                    view?.setRefreshEnable(true)
-//                }
-//            }
-//
-//            fun onAppError(code: String, msg: String) {
-//                view?.hintLoadDialog()
-//                if (page == Constants.PAGE_COUNT) {
-//                    objectList!!.clear()
-//                    view?.stopRefresh()
-//                    view?.showEmptyView()
-//                } else {
-//                    view?.stopLoadMore()
-//                    view?.toast(R.string.already_in_the_end)
-//                }
-//                view?.setLoadMoreEnable(false)
-//                view?.setRefreshEnable(true)
-//            }
-//        }, OrderListBean::class.java)
+        val params = StringUtils.getListParams(page, Constants.PAGE_SIZE, obj)
+        val body = StringUtils.createBody(params)
+        val orderList = ApiUtils.instance.service.requestOrderList(body)
+        orderList.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(ResultObserver(object : ResultListener<TabOrderListBean> {
+                override fun success(result: TabOrderListBean) {
+                    when (result.getErrCode()) {
+                        "0" -> {
+                            val beans = result.getDatas()
+                            view?.hintLoadDialog()
+                            if (beans != null && beans.size != Constants.NUMBER_ZERO) {
+                                view?.showListView()
+                                if (page == Constants.PAGE_COUNT) {
+                                    objectList!!.clear()
+                                    view?.stopRefresh()
+                                } else {
+                                    view?.stopLoadMore()
+                                }
+                                objectList!!.addAll(beans)
+                                view?.updateListView(objectList!!)
+                            } else {
+                                if (page == Constants.PAGE_COUNT) {
+                                    objectList!!.clear()
+                                    view?.stopRefresh()
+                                    view?.showEmptyView()
+                                } else {
+                                    view?.stopLoadMore()
+                                    view?.toast(R.string.already_in_the_end)
+                                }
+                            }
+                        }
+                        else -> {
+                            view?.hintLoadDialog()
+                            val errCode = result.getErrCode()
+                            val errMsg = result.getErrMsg()
+                            val resultError = ErrorManager.checkResultError(errCode, errMsg)
+                            LogUtils.loge("请求列表信息：$resultError")
+                            if (page == Constants.PAGE_COUNT) {
+                                objectList!!.clear()
+                                view?.stopRefresh()
+                                view?.showEmptyView()
+                            } else {
+                                view?.stopLoadMore()
+                                view?.toast(R.string.already_in_the_end)
+                            }
+                        }
+                    }
+                }
+
+                override fun failed(error: Throwable?) {
+                    val message = error?.message
+                    LogUtils.loge("请求列表错误信息：$message")
+                    view?.hintLoadDialog()
+                    if (page == Constants.PAGE_COUNT) {
+                        objectList!!.clear()
+                        view?.stopRefresh()
+                        view?.showEmptyView()
+                    } else {
+                        view?.stopLoadMore()
+                        view?.toast(R.string.already_in_the_end)
+                    }
+                }
+            }
+            ))
+
     }
 
-    override fun onItemClick(position: Int, bean: JSONObject) {
+    override fun onItemClick(position: Int, bean: TabOrderListBean.OrderBean) {
         view?.toast("条目被点击")
 
     }
 
-    override fun onLongClick(position: Int, bean: JSONObject) {
+    override fun onLongClick(position: Int, bean: TabOrderListBean.OrderBean) {
         view?.toast("条目被长按")
     }
 
-    override fun attchView(view: TabContract.View) {
+    override fun attachView(view: TabContract.View) {
         this.view = view
     }
 

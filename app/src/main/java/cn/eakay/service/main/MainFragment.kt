@@ -1,6 +1,5 @@
 package cn.eakay.service.main
 
-import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.view.View
@@ -14,7 +13,6 @@ import cn.eakay.service.R
 import cn.eakay.service.base.BaseFragment
 import cn.eakay.service.base.Constants
 import cn.eakay.service.utils.ToastUtils
-import cn.eakay.service.utils.ViewUtils
 import cn.eakay.service.widget.EakaySlideToUnLockView
 import com.alibaba.fastjson.JSONObject
 import com.shs.easywebviewsupport.utils.LogUtils
@@ -43,7 +41,7 @@ class MainFragment : BaseFragment(), MainContract.View, EakaySlideToUnLockView.C
     override fun bindView() {
         presenter = MainPresenter()
         presenter.apply {
-            presenter.attchView(this@MainFragment)
+            presenter.attachView(this@MainFragment)
         }
 
     }

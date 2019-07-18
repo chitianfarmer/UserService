@@ -14,7 +14,7 @@ interface BasePresenter<T : BaseView> {
     /**
      * 绑定view
      */
-    fun attchView(view : T)
+    fun attachView(view : T)
 
     /**
      * 解绑View

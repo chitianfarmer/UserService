@@ -6,14 +6,22 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import cn.eakay.service.R
 import cn.eakay.service.base.Constants
+import cn.eakay.service.base.EakayApplication
+import cn.eakay.service.network.ApiUtils
+import cn.eakay.service.network.ResultListener
+import cn.eakay.service.network.ResultObserver
 import cn.eakay.service.sign.SignInActivity
 import cn.eakay.service.tabs.TabFragment
 import cn.eakay.service.utils.BdLocationHelper
 import cn.eakay.service.utils.PermissionUtils
+import cn.eakay.service.utils.StringUtils
+import cn.eakay.service.work.WorkActivity
 import com.alibaba.fastjson.JSONObject
 import com.baidu.location.BDLocation
 import com.changyoubao.vipthree.base.LSPUtils
 import com.shs.easywebviewsupport.utils.LogUtils
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.util.ArrayList
 
 /**
@@ -29,9 +37,9 @@ class MainPresenter : MainContract.Presenter, BdLocationHelper.EakayLocationCall
 
     private var view: MainContract.View? = null
     private var fragments: ArrayList<Fragment>? = ArrayList()
-    private var datasEntities: MutableList<JSONObject>? = ArrayList()
+    private var dataEntities: MutableList<JSONObject>? = ArrayList()
 
-    override fun attchView(view: MainContract.View) {
+    override fun attachView(view: MainContract.View) {
         this.view = view
         BdLocationHelper.instance.setEakayLocationCallBackListener(this)
         startLocation()
@@ -75,7 +83,7 @@ class MainPresenter : MainContract.Presenter, BdLocationHelper.EakayLocationCall
     }
 
     override fun getRecordsList(): ArrayList<JSONObject> =
-        ((if (datasEntities == null) ArrayList() else datasEntities) as ArrayList<JSONObject>)
+        ((if (dataEntities == null) ArrayList() else dataEntities) as ArrayList<JSONObject>)
 
     override fun getFragmentList(): ArrayList<Fragment> =
         (if (fragments == null) ArrayList() else fragments) as ArrayList<Fragment>
@@ -95,7 +103,8 @@ class MainPresenter : MainContract.Presenter, BdLocationHelper.EakayLocationCall
         /*切换账户 弹出的确认提示框*/
         val builder = AlertDialog.Builder(activity)
         builder.setMessage(R.string.determined_to_work)
-        builder.setNegativeButton(R.string.dialog_negative_button_text
+        builder.setNegativeButton(
+            R.string.dialog_negative_button_text
         ) { dialog, _ ->
             dialog.dismiss()
             view!!.resetUnLock()
@@ -113,8 +122,8 @@ class MainPresenter : MainContract.Presenter, BdLocationHelper.EakayLocationCall
 
     override fun initTabs() {
         val activity = view!!.getBaseActivity() ?: return
-        if (datasEntities!!.size != Constants.NUMBER_ZERO) {
-            datasEntities!!.clear()
+        if (dataEntities!!.size != Constants.NUMBER_ZERO) {
+            dataEntities!!.clear()
         }
         for (i in Constants.NUMBER_ZERO until Constants.NUMBER_FIVE) {
             val entity = JSONObject()
@@ -140,15 +149,35 @@ class MainPresenter : MainContract.Presenter, BdLocationHelper.EakayLocationCall
                     entity[Constants.KEY_TYPE] = R.drawable.completed
                 }
             }
-            datasEntities!!.add(entity)
+            dataEntities!!.add(entity)
         }
     }
 
     override fun switchAccount() {
+        view?.showLoadDialog()
         val activity = view?.getBaseActivity()
-        LSPUtils.put(Constants.KEY_IS_USER_LOGIN,false)
-        val intent = Intent(activity, SignInActivity::class.java)
-        activity?.startActivity(intent)
-        activity?.finish()
+        val params = JSONObject()
+        val body = StringUtils.createBody(params)
+        val observable = ApiUtils.instance.service.offLineWork(body)
+        observable.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(ResultObserver(object : ResultListener<JSONObject> {
+                override fun success(result: JSONObject) {
+                    LSPUtils.put(Constants.KEY_IS_USER_WORK, false)
+                    EakayApplication.instance?.finishAllActivity()
+                    val it = Intent(activity, WorkActivity::class.java)
+                    it.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    activity?.startActivity(it)
+                    activity?.finish()
+                }
+
+                override fun failed(error: Throwable?) {
+                    view?.hintLoadDialog()
+                    val message = error?.message
+                    view?.toast("下班失败，错误信息：$message")
+                    LogUtils.loge("下班失败错误信息：$message")
+                }
+            }
+            ))
     }
 }

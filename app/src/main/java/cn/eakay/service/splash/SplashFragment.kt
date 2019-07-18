@@ -7,11 +7,15 @@ import android.text.TextUtils
 import cn.eakay.service.R
 import cn.eakay.service.base.BaseFragment
 import cn.eakay.service.base.Constants
+import cn.eakay.service.beans.AuthTokenBean
 import cn.eakay.service.main.MainActivity
 import cn.eakay.service.network.ApiUtils
+import cn.eakay.service.network.ResultListener
+import cn.eakay.service.network.ResultObserver
 import cn.eakay.service.sign.SignInActivity
 import cn.eakay.service.utils.SecurityUtils
 import cn.eakay.service.utils.StringUtils
+import cn.eakay.service.work.WorkActivity
 import com.alibaba.fastjson.JSONObject
 import com.changyoubao.vipthree.base.LSPUtils
 import com.shs.easywebviewsupport.utils.LogUtils
@@ -83,22 +87,28 @@ class SplashFragment : BaseFragment() {
             val authToken = ApiUtils.instance.service.checkNoLoginAuthToken(body)
             authToken.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result ->
-                    val errCode = result.errCode
-                    val errMsg = result.errMsg
-                    val accessToken = result.accessToken
-                    when (errCode) {
-                        "0" -> {
-                            LSPUtils.put(Constants.KEY_AUTN_TOKEN, accessToken)
+                .subscribe(ResultObserver(
+                    object : ResultListener<AuthTokenBean> {
+                        override fun success(result: AuthTokenBean) {
+                            val errCode = result.getErrCode()
+                            val errMsg = result.getErrMsg()
+                            val accessToken = result.getAccessToken()
+                            when (errCode) {
+                                "0" -> {
+                                    LSPUtils.put(Constants.KEY_AUTN_TOKEN, accessToken)
+                                }
+                                else -> {
+                                    LogUtils.loge("获取token请求失败，错误码：$errCode，错误信息：$errMsg")
+                                }
+                            }
                         }
-                        else -> {
-                            LogUtils.loge("获取token请求失败，错误码：$errCode，错误信息：$errMsg")
+
+                        override fun failed(error: Throwable?) {
+                            val message = error?.message
+                            LogUtils.loge("获取token请求失败：$message")
                         }
                     }
-                }, { error ->
-                    val message = error.message
-                    LogUtils.loge("获取token请求失败：$message")
-                })
+                ))
         }
     }
 
@@ -122,8 +132,7 @@ class SplashFragment : BaseFragment() {
                 /*if sign in ，check user is work or no ，if work go to main else to work */
                 if (!userWorked) {
                     /**上班页面 */
-//                    goToWork()
-                    goToMain()
+                    goToWork()
                 } else {
                     /**主页面 */
                     goToMain()
@@ -156,15 +165,15 @@ class SplashFragment : BaseFragment() {
         activity!!.finish()
     }
 
-    //    /**
-//     * 进入登录界面
-//     *
-//     * @author pjc
-//     */
+    /**
+     * 进入登录界面
+     *
+     * @author pjc
+     */
     private fun goToWork() {
-//        val intent = Intent(activity!!, GoToWorkActivity::class.java)
-//        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-//        startActivity(intent)
-//        activity!!.finish()
+        val intent = Intent(activity!!, WorkActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
+        activity!!.finish()
     }
 }

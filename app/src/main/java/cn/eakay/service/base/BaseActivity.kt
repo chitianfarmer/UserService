@@ -22,6 +22,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import cn.eakay.service.R
+import cn.eakay.service.network.SubscriptionManager
 import cn.eakay.service.utils.RomUtils
 import cn.eakay.service.utils.SystemBarUtils
 import cn.eakay.service.utils.ToastUtils
@@ -169,7 +170,9 @@ abstract class BaseActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListen
 
     override fun onDestroy() {
         super.onDestroy()
+        SubscriptionManager.instance.cancelAll()
         EakayApplication.instance!!.removeActivity(this)
+
     }
 
     /**

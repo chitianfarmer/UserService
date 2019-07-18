@@ -8,11 +8,13 @@ import android.util.Log
 import cn.eakay.service.R
 import cn.eakay.service.base.Constants
 import cn.eakay.service.base.EakayApplication
+import cn.eakay.service.beans.AuthTokenBean
 import cn.eakay.service.beans.OtherLoginMessage
 import cn.eakay.service.main.MainActivity
 import cn.eakay.service.utils.ErrorManager
 import cn.eakay.service.utils.SecurityUtils
 import cn.eakay.service.utils.StringUtils
+import cn.eakay.service.utils.ToastUtils
 import com.alibaba.fastjson.JSONObject
 import com.changyoubao.vipthree.base.LSPUtils
 import com.shs.easywebviewsupport.utils.LogUtils
@@ -38,7 +40,7 @@ class TokenInterceptor : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val oldRequest = chain.request()
-        val newRequest = getNewRequest(oldRequest, false)
+        val newRequest = getNewRequest(oldRequest)
         var response = chain.proceed(newRequest)
         val body = response.body
         val resp = body?.string()
@@ -61,11 +63,13 @@ class TokenInterceptor : Interceptor {
             }
             Constants.KEY_REQUEST_TOKEN_CODE -> {
                 refreshToken()
-                val build = getNewRequest(oldRequest, true)
+                val build = getNewRequest(oldRequest)
                 response = chain.proceed(build)
             }
             else -> {
-                ErrorManager.checkResultError(errorCode, errorMSg)
+                val resultError = ErrorManager.checkResultError(errorCode, errorMSg)
+                ToastUtils.showShort(resultError!!)
+                LogUtils.loge("token拦截器请求失败：$resultError")
             }
         }
         return response
@@ -77,13 +81,11 @@ class TokenInterceptor : Interceptor {
      * @param oldRequest
      * @return
      */
-    private fun getNewRequest(oldRequest: Request, refreshToken: Boolean): Request {
+    private fun getNewRequest(oldRequest: Request): Request {
         val newHeaders = oldRequest.headers.newBuilder().build()
         val builder = oldRequest.url
             .newBuilder()
-        if (refreshToken) {
-            token = LSPUtils.get(Constants.KEY_AUTN_TOKEN, "")
-        }
+        token = LSPUtils.get(Constants.KEY_AUTN_TOKEN, "")
         return oldRequest.newBuilder()
             .headers(newHeaders)
             .header(Constants.KEY_REQUEST_ACCESS_TOKEN, token!!)
@@ -105,29 +107,37 @@ class TokenInterceptor : Interceptor {
             param["deviceToken"] = deviceToken
         }
         param["sign"] =
-            SecurityUtils.MD5(Constants.APP_KEY + Constants.APP_SECRET + (if (TextUtils.isEmpty(deviceToken)) "" else deviceToken) + timeMillis)
+            SecurityUtils.MD5(Constants.APP_KEY + Constants.APP_SECRET + (if (deviceToken.isEmpty()) "" else deviceToken) + timeMillis)
         val body = StringUtils.createBody(param)
         val authToken = ApiUtils.instance.service.refreshLoginAuthToken(body)
         authToken.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ result ->
-                val errCode = result.errCode
-                val errMsg = result.errMsg
-                val accessToken = result.accessToken
-                when (errCode) {
-                    "0" -> {
-                        token = accessToken
-                        LSPUtils.put(Constants.KEY_AUTN_TOKEN, accessToken)
-                        LogUtils.loge("token过期时刷新的Token：$accessToken")
+            .subscribe(ResultObserver(
+                object :ResultListener<AuthTokenBean>{
+                    override fun success(result: AuthTokenBean) {
+                        val errCode = result.getErrCode()
+                        val errMsg = result.getErrMsg()
+                        val accessToken = result.getAccessToken()
+                        when (errCode) {
+                            "0" -> {
+                                token = accessToken
+                                LSPUtils.put(Constants.KEY_AUTN_TOKEN, accessToken)
+                                LogUtils.loge("token过期时刷新的Token：$accessToken")
+                            }
+                            else -> {
+                                val resultError = ErrorManager.checkResultError(errCode, errMsg)
+                                LogUtils.loge("请求失败，错误码：$errCode，错误信息：$errMsg")
+                                LogUtils.loge("token过期时刷新的Token失败：$resultError")
+                            }
+                        }
                     }
-                    else -> {
-                        LogUtils.loge("请求失败，错误码：$errCode，错误信息：$errMsg")
+
+                    override fun failed(error: Throwable?) {
+                        val message = error?.message
+                        LogUtils.loge("token过期时刷新Token请求失败：$message")
                     }
                 }
-            }, { error ->
-                val message = error.message
-                LogUtils.loge("token过期时刷新Token请求失败：$message")
-            })
+            ))
         Looper.loop()
     }
 }

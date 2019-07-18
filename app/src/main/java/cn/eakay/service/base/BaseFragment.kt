@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import cn.eakay.service.network.SubscriptionManager
 
 /**
  * @packageName: UserService
@@ -38,5 +39,10 @@ abstract class BaseFragment : Fragment() {
 
     fun closeProgress() {
 
+    }
+
+    override fun onDestroy() {
+        SubscriptionManager.instance.cancelAll()
+        super.onDestroy()
     }
 }

@@ -6,9 +6,10 @@ import android.text.TextWatcher
 import android.view.View
 import cn.eakay.service.R
 import cn.eakay.service.base.BaseFragment
+import cn.eakay.service.base.Constants
 import cn.eakay.service.utils.ToastUtils
 import cn.eakay.service.utils.ViewUtils
-import com.shs.easywebviewsupport.utils.LogUtils
+import com.changyoubao.vipthree.base.LSPUtils
 import kotlinx.android.synthetic.main.fragment_sign_in.*
 
 /**
@@ -57,14 +58,18 @@ class SignInFragment : BaseFragment(), SignInContract.View, View.OnClickListener
     override fun bindView() {
         presenter = SignInPresenter()
         presenter.apply {
-            presenter.attchView(this@SignInFragment)
+            presenter.attachView(this@SignInFragment)
         }
     }
 
     override fun initData() {
         rl_input.hint = getString(R.string.please_input_mobile)
         rl_password.hint = getString(R.string.please_enter_your_password)
-
+        val account = LSPUtils.get(Constants.KEY_AUTO_FILL_ACCOUNT, "")
+        if (account.isNotEmpty()) {
+            edt_mobile.setText(account)
+            edt_mobile.setSelection(edt_mobile.text.toString().length)
+        }
     }
 
     override fun setListener() {

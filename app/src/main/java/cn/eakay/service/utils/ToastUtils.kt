@@ -1,6 +1,7 @@
 package cn.eakay.service.utils
 
 import android.content.Context
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import cn.eakay.service.base.EakayApplication
@@ -23,34 +24,43 @@ object ToastUtils {
         }
     }
 
-     private fun showToast(msg: String) {
+    private fun showToast(msg: String) {
+        Looper.prepare()
         if (toast == null) {
             toast = Toast.makeText(EakayApplication.instance!!, msg, Toast.LENGTH_SHORT)
         }
         toast!!.setText(msg)
         toast!!.apply { show() }
+        Looper.loop()
     }
 
-     private fun showToast(msg: Int) {
+    private fun showToast(msg: Int) {
+        Looper.prepare()
         if (toast == null) {
             toast = Toast.makeText(EakayApplication.instance!!, msg, Toast.LENGTH_SHORT)
         }
         toast!!.setText(msg)
         toast!!.apply { show() }
-    }
-    fun showToast(context: Context,msg: String) {
-        if (toast == null) {
-            toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT)
-        }
-        toast!!.setText(msg)
-        toast!!.apply { show() }
+        Looper.loop()
     }
 
-    fun showToast(context: Context,msg: Int) {
+    fun showToast(context: Context, msg: String) {
+        Looper.prepare()
         if (toast == null) {
             toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT)
         }
         toast!!.setText(msg)
         toast!!.apply { show() }
+        Looper.loop()
+    }
+
+    fun showToast(context: Context, msg: Int) {
+        Looper.prepare()
+        if (toast == null) {
+            toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT)
+        }
+        toast!!.setText(msg)
+        toast!!.apply { show() }
+        Looper.loop()
     }
 }

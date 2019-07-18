@@ -5,17 +5,23 @@ import android.content.Intent
 import android.text.TextUtils
 import cn.eakay.service.R
 import cn.eakay.service.base.Constants
+import cn.eakay.service.beans.AuthTokenBean
+import cn.eakay.service.beans.DeviceTokenBean
+import cn.eakay.service.beans.LoginAndRegisterBean
 import cn.eakay.service.main.MainActivity
 import cn.eakay.service.network.ApiUtils
+import cn.eakay.service.network.ResultListener
+import cn.eakay.service.network.ResultObserver
+import cn.eakay.service.network.SubscriptionManager
 import cn.eakay.service.utils.ErrorManager
 import cn.eakay.service.utils.SecurityUtils
 import cn.eakay.service.utils.StringUtils
+import cn.eakay.service.work.WorkActivity
 import com.alibaba.fastjson.JSONObject
 import com.changyoubao.vipthree.base.LSPUtils
 import com.shs.easywebviewsupport.utils.LogUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import org.apache.commons.logging.Log
 
 /**
  * @packageName: UserService
@@ -49,6 +55,7 @@ class SignInPresenter : SignInContract.Presenter {
             view?.setPassWordError(R.string.please_enter_your_password, true)
             return
         }
+        view?.showLoadDialog()
         val deviceToken = LSPUtils.get(Constants.KEY_DEVICE_TOKEN, "")
         if (deviceToken.isEmpty()) {
             getDeviceToken(account, password)
@@ -59,10 +66,13 @@ class SignInPresenter : SignInContract.Presenter {
 
 
     override fun jumpToWorkView() {
-        LSPUtils.put(Constants.KEY_IS_USER_WORK, true)
+        LSPUtils.put(Constants.KEY_IS_USER_LOGIN, true)
+        val activity = view?.getBaseActivity()
+        val intent = Intent(activity, WorkActivity::class.java)
+        activity?.startActivity(intent)
     }
 
-    override fun attchView(view: SignInContract.View) {
+    override fun attachView(view: SignInContract.View) {
         this.view = view
     }
 
@@ -72,7 +82,7 @@ class SignInPresenter : SignInContract.Presenter {
 
     @SuppressLint("CheckResult")
     private fun login(account: String, password: String) {
-        var json = JSONObject()
+        val json = JSONObject()
         val deviceToken = LSPUtils.get(Constants.KEY_DEVICE_TOKEN, "")
         json["telphone"] = account
         json["password"] = password
@@ -81,64 +91,76 @@ class SignInPresenter : SignInContract.Presenter {
         val signIn = ApiUtils.instance.service.signIn(body)
         signIn.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { result ->
-                    when (result.getErrCode()) {
-                        "0" -> {
-                            val loginBean = result.getDatas()
-                            val status = loginBean?.loginStatus
-                            val statusComment = loginBean?.loginStatusComment
-                            LogUtils.loge("登陆的状态：$status,注册的状态：$statusComment")
-                            refreshLoginToken(account)
-                        }
-                        else -> {
-                            val errCode = result.getErrCode()
-                            val errMsg = result.getErrMsg()
-                            LogUtils.loge("错误信息：$errMsg")
-                            ErrorManager.checkResultError(errCode, errMsg)
-
+            .subscribe(ResultObserver(
+                object : ResultListener<LoginAndRegisterBean> {
+                    override fun success(result: LoginAndRegisterBean) {
+                        when (result.getErrCode()) {
+                            "0" -> {
+                                val loginBean = result.getDatas()
+                                val status = loginBean?.loginStatus
+                                val statusComment = loginBean?.loginStatusComment
+                                LogUtils.loge("登陆的状态：$status,注册的状态：$statusComment")
+                                refreshLoginToken(account)
+                            }
+                            else -> {
+                                view?.hintLoadDialog()
+                                val errCode = result.getErrCode()
+                                val errMsg = result.getErrMsg()
+                                val resultError = ErrorManager.checkResultError(errCode, errMsg)
+                                LogUtils.loge("错误信息：$resultError")
+                            }
                         }
                     }
-                }, { error ->
-                    val message = error.message
-                    LogUtils.loge("登陆请求失败，错误信息：$message")
-                    view?.toast("请求失败，错误信息：$message")
-                })
+
+                    override fun failed(error: Throwable?) {
+                        view?.hintLoadDialog()
+                        val message = error?.message
+                        LogUtils.loge("登陆请求失败，错误信息：$message")
+                        view?.toast("请求失败，错误信息：$message")
+                    }
+                }
+            ))
     }
 
     @SuppressLint("CheckResult")
     private fun getDeviceToken(account: String, password: String) {
-        var json = JSONObject()
+        val json = JSONObject()
         json["deviceToken"] = ""
         json["accessToken"] = ""
         val body = StringUtils.createBody(json)
         val deviceToken = ApiUtils.instance.service.getDeviceToken(body)
         deviceToken.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { result ->
-                    when (result.getErrCode()) {
-                        "0" -> {
-                            val deviceBean = result.getDatas()
-                            LSPUtils.put(Constants.KEY_DEVICE_TOKEN, deviceBean)
-                            login(account, password)
-                        }
-                        else -> {
-                            val errCode = result.getErrCode()
-                            val errMsg = result.getErrMsg()
-                            LogUtils.loge("请求错误错误信息：$errMsg")
-                            ErrorManager.checkResultError(errCode, errMsg)
+            .subscribe(ResultObserver(
+                object : ResultListener<DeviceTokenBean> {
+                    override fun success(result: DeviceTokenBean) {
+                        when (val code = result.getErrCode()) {
+                            "0" -> {
+                                val deviceBean = result.getDatas()
+                                LSPUtils.put(Constants.KEY_DEVICE_TOKEN, deviceBean)
+                                login(account, password)
+                            }
+                            else -> {
+                                view?.hintLoadDialog()
+                                val errMsg = result.getErrMsg()
+                                val resultError = ErrorManager.checkResultError(code, errMsg)
+                                LogUtils.loge("请求deviceToken错误信息：$resultError")
+                            }
                         }
                     }
-                }, { error ->
-                    val message = error.message
-                    LogUtils.loge("登陆获取deviceToken错误信息：$message")
-                    view?.toast("请求失败，错误信息：$message")
-                })
+
+                    override fun failed(error: Throwable?) {
+                        view?.hintLoadDialog()
+                        val message = error?.message
+                        LogUtils.loge("登陆获取deviceToken错误信息：$message")
+                        view?.toast("请求失败，错误信息：$message")
+                    }
+                }
+            ))
     }
+
     @SuppressLint("CheckResult")
-    private fun refreshLoginToken(account: String){
-        val activity = view?.getBaseActivity()
+    private fun refreshLoginToken(account: String) {
         val timeMillis = System.currentTimeMillis()
         val param = JSONObject()
         param["appId"] = Constants.APP_KEY
@@ -148,33 +170,40 @@ class SignInPresenter : SignInContract.Presenter {
         if (deviceToken.isNotEmpty()) {
             param["deviceToken"] = deviceToken
         }
-        param["sign"] = SecurityUtils.MD5(Constants.APP_KEY + Constants.APP_SECRET + (if (TextUtils.isEmpty(deviceToken)) "" else deviceToken) + timeMillis)
+        param["sign"] =
+            SecurityUtils.MD5(Constants.APP_KEY + Constants.APP_SECRET + (if (TextUtils.isEmpty(deviceToken)) "" else deviceToken) + timeMillis)
         val body = StringUtils.createBody(param)
         val authToken = ApiUtils.instance.service.refreshLoginAuthToken(body)
         authToken.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ result ->
-                val errCode = result.errCode
-                val errMsg = result.errMsg
-                val accessToken = result.accessToken
-                when (errCode) {
-                    "0" -> {
-                        LSPUtils.put(Constants.KEY_AUTN_TOKEN, accessToken)
-                        LSPUtils.put(Constants.KEY_IS_USER_LOGIN, true)
-                        LSPUtils.put(Constants.KEY_AUTO_FILL_ACCOUNT,account)
-                        val intent = Intent(activity, MainActivity::class.java)
-                        activity?.startActivity(intent)
-                        LSPUtils.put(Constants.KEY_IS_USER_LOGIN, true)
-                        activity?.finish()
-                        LogUtils.loge("刷新了登陆的Token：$accessToken")
-                    }
-                    else -> {
-                        LogUtils.loge("请求失败，错误码：$errCode，错误信息：$errMsg")
+            .subscribe(ResultObserver(object : ResultListener<AuthTokenBean> {
+                override fun success(result: AuthTokenBean) {
+                    view?.hintLoadDialog()
+                    val errCode = result.getErrCode()
+                    val errMsg = result.getErrMsg()
+                    when (errCode) {
+                        "0" -> {
+                            val accessToken = result.getAccessToken()
+                            LSPUtils.put(Constants.KEY_AUTN_TOKEN, accessToken)
+                            LSPUtils.put(Constants.KEY_IS_USER_LOGIN, true)
+                            LSPUtils.put(Constants.KEY_AUTO_FILL_ACCOUNT, account)
+                            LogUtils.loge("刷新了登陆的Token：$accessToken")
+                            jumpToWorkView()
+                        }
+                        else -> {
+                            view?.hintLoadDialog()
+                            val resultError = ErrorManager.checkResultError(errCode, errMsg)
+                            LogUtils.loge("登陆刷新token请求失败信息：$resultError")
+                        }
                     }
                 }
-            }, { error ->
-                val message = error.message
-                LogUtils.loge("登陆刷新token请求失败：$message")
-            })
+
+                override fun failed(error: Throwable?) {
+                    view?.hintLoadDialog()
+                    val message = error?.message
+                    LogUtils.loge("登陆刷新token请求失败：$message")
+                }
+            }
+            ))
     }
 }

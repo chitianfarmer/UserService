@@ -9,11 +9,15 @@ package cn.eakay.service.beans
  * @org: http://www.eakay.cn (芜湖恒天易开软件科技有限公司)
  *
  */
-data class AuthTokenBean(
-    val accessToken: String,
-    val appId: String,
-    val datas: Any,
-    val errCode: String,
-    val errMsg: String,
-    val expireIn: String
-)
+class AuthTokenBean : BaseResponse() {
+    private var accessToken: String? = null
+    private val appId: String? = null
+    private val expireIn: String? = null
+    fun getAccessToken(): String? {
+        return accessToken
+    }
+
+    fun setAccessToken(token: String?) {
+        this.accessToken = token
+    }
+}

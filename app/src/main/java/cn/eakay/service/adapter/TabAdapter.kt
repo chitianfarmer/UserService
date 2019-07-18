@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import cn.eakay.service.R
+import cn.eakay.service.beans.TabOrderListBean
 import com.alibaba.fastjson.JSONObject
 import java.util.*
 
@@ -22,10 +23,10 @@ import java.util.*
  */
 class TabAdapter : RecyclerView.Adapter<TabAdapter.ItemHolder> {
     private var context: Context
-    private var list: MutableList<JSONObject>
+    private var list: MutableList<TabOrderListBean.OrderBean>
     private var listener: OnItemClickListener? = null
 
-    constructor(context: Context, list: MutableList<JSONObject>) {
+    constructor(context: Context, list: MutableList<TabOrderListBean.OrderBean>) {
         this.context = context
         this.list = list
 
@@ -40,26 +41,16 @@ class TabAdapter : RecyclerView.Adapter<TabAdapter.ItemHolder> {
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
         val bean = list[position]
-//        /*订单类型*/
-//        val type = bean.getOrderType()
-//        /*订单编号*/
-//        val orderNumber = bean.getOrderNumber()
-//        /*订单状态*/
-//        val orderStatus = bean.getOrderStatus()
-//        /*订单地址*/
-//        val address = bean.getCourrentAddress()
-//        /*订单时间*/
-//        val time = bean.getServiceTime()
         /*订单类型*/
-        val type = "1"
+        val type = bean.orderType
         /*订单编号*/
-        val orderNumber = "1"
+        val orderNumber = bean.orderNumber
         /*订单状态*/
-        val orderStatus = "1"
+        val orderStatus = bean.orderStatus
         /*订单地址*/
-        val address = "1"
+        val address = bean.courrentAddress
         /*订单时间*/
-        val time = "1"
+        val time = bean.serviceTime
         /*赋值*/
         if (context.getString(R.string.number_0) == type) {
             /*上门服务订单详情*/
@@ -100,8 +91,8 @@ class TabAdapter : RecyclerView.Adapter<TabAdapter.ItemHolder> {
     }
 
     interface OnItemClickListener {
-        fun onClick(position: Int, bean: JSONObject)
-        fun onLongClick(position: Int, bean: JSONObject)
+        fun onClick(position: Int, bean: TabOrderListBean.OrderBean)
+        fun onLongClick(position: Int, bean: TabOrderListBean.OrderBean)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener) {

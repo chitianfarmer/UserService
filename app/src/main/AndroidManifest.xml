@@ -108,6 +108,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!--上班界面-->
+        <activity android:name=".work.WorkActivity"
+                  android:launchMode="singleTask"
+                  android:screenOrientation="portrait"/>
 
 
         <!--百度地图正式环境-->

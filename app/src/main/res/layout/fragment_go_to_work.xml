@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/base_activity_bg">
+
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="86dp"
+        android:layout_height="86dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/tv_app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="@string/app_name"
+        android:textColor="@color/text_sign_in_color"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_go_to_work_title"
+        android:layout_width="wrap_content"
+        android:layout_height="22dp"
+        android:layout_below="@+id/tv_app_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="85dp"
+        android:text="@string/enter_the_employee_s_employee_number"
+        android:textColor="@color/text_sign_in_color"
+        android:textSize="18sp" />
+
+    <RelativeLayout
+        android:id="@+id/rl_job_number_one"
+        android:layout_width="300dp"
+        android:layout_height="@dimen/item_height"
+        android:layout_below="@+id/tv_go_to_work_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="25dp">
+
+        <EditText
+            android:id="@+id/edt_job_number_one"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textCursorDrawable="@drawable/bg_curse"
+            android:background="@null"
+            android:gravity="center"
+            android:hint="@string/job_number_one"
+            android:inputType="textVisiblePassword"
+            android:maxLines="1"
+            android:textColor="@color/text_sign_in_color"
+            android:textColorHint="@color/edit_verify_text_hint_color"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/order_payment_dev" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_job_number_two"
+        android:layout_width="300dp"
+        android:layout_height="@dimen/item_height"
+        android:layout_below="@+id/rl_job_number_one"
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp">
+
+        <EditText
+            android:id="@+id/edt_job_number_two"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@null"
+            android:gravity="center"
+            android:hint="@string/job_number_two"
+            android:textCursorDrawable="@drawable/bg_curse"
+            android:inputType="textVisiblePassword"
+            android:maxLines="1"
+            android:textColor="@color/text_sign_in_color"
+            android:textColorHint="@color/edit_verify_text_hint_color"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/order_payment_dev" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_go_to_work"
+        android:layout_width="300dp"
+        android:layout_height="@dimen/item_height"
+        android:layout_below="@+id/tv_error_tips"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="25dp"
+        android:background="@drawable/bg_sign_in_btn_selector"
+        android:enabled="false"
+        android:gravity="center"
+        android:text="@string/go_to_work"
+        android:textColor="@color/text_sign_in_btn_color"
+        android:textSize="18sp" />
+
+    <TextView
+        android:visibility="invisible"
+        android:id="@+id/tv_error_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="17dp"
+        android:layout_below="@+id/rl_job_number_two"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="25dp"
+        android:text="@string/tips"
+        android:textColor="@color/bill_status_color"
+        android:textSize="16sp" />
+</RelativeLayout>
