@@ -42,6 +42,7 @@ class TabOrderListBean : BaseResponse() {
         var orderType: String? = null
         var serviceCode: String? = null
         var serviceTime: String? = null
+
     }
 
 }

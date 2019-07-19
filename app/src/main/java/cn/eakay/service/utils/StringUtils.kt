@@ -12,6 +12,7 @@ import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import cn.eakay.service.R
 import cn.eakay.service.base.Constants
+import cn.eakay.service.beans.PictureOrderMessage
 import com.alibaba.fastjson.JSONObject
 import com.changyoubao.vipthree.base.LSPUtils
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -1089,8 +1090,8 @@ object StringUtils {
      * @param status
      * @return
      */
-    fun getOrderStatus(context: Context, status: String, type: String): String {
-        if (TextUtils.isEmpty(status)) {
+    fun getOrderStatus(context: Context, status: String?, type: String): String {
+        if (status.isNullOrEmpty()) {
             return context.getString(R.string.order_status_zero)
         }
         when (status) {
@@ -1150,5 +1151,50 @@ object StringUtils {
         }
         return RequestBody.create("application/json; charset=utf-8".toMediaTypeOrNull()!!, param.toJSONString())
     }
+    /**
+     * 连接方法 类似于javascript
+     *
+     * @param join    连接字符串
+     * @param listStr 需要连接的集合
+     * @return
+     */
+    fun joinString(join: String, listStr: List<PictureOrderMessage>): String {
+        val sb = StringBuffer()
+        var i = 0
+        val len = listStr.size
+        while (i < len) {
+            if (i == len - 1) {
+                sb.append(listStr[i].getRemotePath())
+            } else {
+                sb.append(listStr[i].getRemotePath()).append(join)
+            }
+            i++
+        }
+        return sb.toString()
+    }
 
+    /**
+     * 拆分以","拼接的String字符串并返回array
+     *
+     * @param imagePaths
+     * @return
+     */
+    fun splitStringToList(imagePaths: String?): List<PictureOrderMessage> {
+        val paths = ArrayList<PictureOrderMessage>()
+        if (imagePaths.isNullOrEmpty()) {
+            return paths
+        }
+        if (imagePaths.contains(",")) {
+            val split = imagePaths.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            for (i in split.indices) {
+                val path = split[i]
+                val message = PictureOrderMessage(Constants.NUMBER_ONE, null, path)
+                paths.add(message)
+            }
+        } else {
+            val message = PictureOrderMessage(Constants.NUMBER_ONE, null, imagePaths)
+            paths.add(message)
+        }
+        return paths
+    }
 }

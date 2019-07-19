@@ -25,42 +25,34 @@ object ToastUtils {
     }
 
     private fun showToast(msg: String) {
-        Looper.prepare()
         if (toast == null) {
             toast = Toast.makeText(EakayApplication.instance!!, msg, Toast.LENGTH_SHORT)
         }
         toast!!.setText(msg)
         toast!!.apply { show() }
-        Looper.loop()
     }
 
     private fun showToast(msg: Int) {
-        Looper.prepare()
         if (toast == null) {
             toast = Toast.makeText(EakayApplication.instance!!, msg, Toast.LENGTH_SHORT)
         }
         toast!!.setText(msg)
         toast!!.apply { show() }
-        Looper.loop()
     }
 
     fun showToast(context: Context, msg: String) {
-        Looper.prepare()
         if (toast == null) {
             toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT)
         }
         toast!!.setText(msg)
         toast!!.apply { show() }
-        Looper.loop()
     }
 
     fun showToast(context: Context, msg: Int) {
-        Looper.prepare()
         if (toast == null) {
             toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT)
         }
         toast!!.setText(msg)
         toast!!.apply { show() }
-        Looper.loop()
     }
 }

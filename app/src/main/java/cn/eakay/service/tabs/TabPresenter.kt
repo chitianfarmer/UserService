@@ -1,12 +1,14 @@
 package cn.eakay.service.tabs
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import cn.eakay.service.R
 import cn.eakay.service.base.Constants
 import cn.eakay.service.beans.TabOrderListBean
 import cn.eakay.service.network.ApiUtils
 import cn.eakay.service.network.ResultListener
 import cn.eakay.service.network.ResultObserver
+import cn.eakay.service.orders.house.HouseOrderDetailActivity
 import cn.eakay.service.utils.ErrorManager
 import cn.eakay.service.utils.StringUtils
 import com.alibaba.fastjson.JSONObject
@@ -123,12 +125,27 @@ class TabPresenter : TabContract.Presenter {
     }
 
     override fun onItemClick(position: Int, bean: TabOrderListBean.OrderBean) {
-        view?.toast("条目被点击")
+        val activity = view?.getBaseActivity()
+        val orderType = bean.orderType
+        val orderId = bean.id
+        if (activity?.getString(R.string.number_1).equals(orderType)) {
+            return
+        }
+        val intent = Intent()
+        intent.setClass(
+            activity, HouseOrderDetailActivity::class.java
+//            if (activity?.getString(R.string.number_0).equals(orderType))
+//                HouseOrderDetailActivity::class.java
+//            else
 
+//                HouseOrderDetailActivity::class.java
+        )
+        intent.putExtra(Constants.KEY_ORDER_TYPE, orderType)
+        intent.putExtra(Constants.KEY_ORDER_ID, orderId)
+        activity?.startActivity(intent)
     }
 
     override fun onLongClick(position: Int, bean: TabOrderListBean.OrderBean) {
-        view?.toast("条目被长按")
     }
 
     override fun attachView(view: TabContract.View) {

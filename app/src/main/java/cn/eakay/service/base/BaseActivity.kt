@@ -42,7 +42,7 @@ import java.util.ArrayList
 abstract class BaseActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
     private val INVALID_CONTENT_ID: Int = -1
     private var view: View? = null
-    private var mToolbar: EToolbar? = null
+    var mToolbar: EToolbar? = null
 
     /**
      * 退出程序.

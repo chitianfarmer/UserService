@@ -14,7 +14,7 @@ import com.alibaba.fastjson.JSONObject
  * @org: http://www.eakay.cn (芜湖恒天易开软件科技有限公司)
  *
  */
-interface TabContract {
+class TabContract {
 
     /**
      * the controller bind view

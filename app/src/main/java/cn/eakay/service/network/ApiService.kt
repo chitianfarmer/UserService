@@ -40,7 +40,12 @@ interface ApiService {
     /*上班*/
     @POST("serviceUserLoginApi/insertServiceUserLoginRecord")
     fun onLineWork(@Body body: RequestBody): Observable<WorkBean>
+
     /*下班*/
     @POST("serviceUserLoginApi/updateServiceUserLoginRecord")
     fun offLineWork(@Body body: RequestBody): Observable<JSONObject>
+
+    /*订单详情*/
+    @POST("serviceOrderApi/getServiceOrderInfoById")
+    fun getOrderDetailInfo(@Body body: RequestBody): Observable<OrderDetailBean>
 }

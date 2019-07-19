@@ -67,9 +67,11 @@ class TokenInterceptor : Interceptor {
                 response = chain.proceed(build)
             }
             else -> {
+                Looper.prepare()
                 val resultError = ErrorManager.checkResultError(errorCode, errorMSg)
                 ToastUtils.showShort(resultError!!)
                 LogUtils.loge("token拦截器请求失败：$resultError")
+                Looper.loop()
             }
         }
         return response
@@ -113,7 +115,7 @@ class TokenInterceptor : Interceptor {
         authToken.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(ResultObserver(
-                object :ResultListener<AuthTokenBean>{
+                object : ResultListener<AuthTokenBean> {
                     override fun success(result: AuthTokenBean) {
                         val errCode = result.getErrCode()
                         val errMsg = result.getErrMsg()
@@ -125,9 +127,10 @@ class TokenInterceptor : Interceptor {
                                 LogUtils.loge("token过期时刷新的Token：$accessToken")
                             }
                             else -> {
+                                Looper.prepare()
                                 val resultError = ErrorManager.checkResultError(errCode, errMsg)
-                                LogUtils.loge("请求失败，错误码：$errCode，错误信息：$errMsg")
                                 LogUtils.loge("token过期时刷新的Token失败：$resultError")
+                                Looper.loop()
                             }
                         }
                     }

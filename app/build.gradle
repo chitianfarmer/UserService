@@ -115,4 +115,6 @@ dependencies {
     implementation rootProject.ext.dependencies["smartRefresh"]
     //smartRefreshHeader
     implementation rootProject.ext.dependencies["smartHeader"]
+    //glide
+    implementation rootProject.ext.dependencies["glide"]
 }

@@ -27,7 +27,6 @@ class SignInActivity : BaseActivity() {
 
     override fun onViewCreated() {
         super.onViewCreated()
-
         val transaction = supportFragmentManager.beginTransaction();
         transaction.add(R.id.frame_content, SignInFragment.newInstance)
         transaction.commitAllowingStateLoss()

@@ -42,8 +42,6 @@ class EakayApplication : MultiDexApplication() {
         SDKInitializer.initialize(this)
         //设置使用https请求
         SDKInitializer.setHttpsEnable(true)
-//        //为防止加入百度地图而引起多次初始化加的判断条件
-//        val pid = Process.myPid()
     }
 
     init {

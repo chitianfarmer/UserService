@@ -60,6 +60,8 @@ ext {
             //SmartRefreshLayout
             smartRefresh          : 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-andx-11',
             //smartRefreshHeader
-            smartHeader           : 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-andx-11'
+            smartHeader           : 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-andx-11',
+            //glide
+            glide                 : 'com.github.bumptech.glide:glide:4.9.0'
     ]
 }
