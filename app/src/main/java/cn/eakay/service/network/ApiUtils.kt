@@ -44,9 +44,9 @@ class ApiUtils private constructor() {
             if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
         val okHttpClient = OkHttpClient()
             .newBuilder()
-            .connectTimeout(20000, TimeUnit.MILLISECONDS)
-            .readTimeout(20000, TimeUnit.MILLISECONDS)
-            .writeTimeout(20000, TimeUnit.MILLISECONDS)
+            .connectTimeout(20, TimeUnit.SECONDS)
+            .readTimeout(20, TimeUnit.SECONDS)
+            .writeTimeout(20, TimeUnit.SECONDS)
             /*失败重连*/
             .retryOnConnectionFailure(true)
             /*添加拦截器*/

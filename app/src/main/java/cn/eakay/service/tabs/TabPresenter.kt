@@ -9,6 +9,7 @@ import cn.eakay.service.network.ApiUtils
 import cn.eakay.service.network.ResultListener
 import cn.eakay.service.network.ResultObserver
 import cn.eakay.service.orders.house.HouseOrderDetailActivity
+import cn.eakay.service.orders.rescue.RescueOrderDetailActivity
 import cn.eakay.service.utils.ErrorManager
 import cn.eakay.service.utils.StringUtils
 import com.alibaba.fastjson.JSONObject
@@ -114,6 +115,7 @@ class TabPresenter : TabContract.Presenter {
                         objectList!!.clear()
                         view?.stopRefresh()
                         view?.showEmptyView()
+                        view?.toast("请求列表错误信息：$message")
                     } else {
                         view?.stopLoadMore()
                         view?.toast(R.string.already_in_the_end)
@@ -128,17 +130,14 @@ class TabPresenter : TabContract.Presenter {
         val activity = view?.getBaseActivity()
         val orderType = bean.orderType
         val orderId = bean.id
-        if (activity?.getString(R.string.number_1).equals(orderType)) {
-            return
-        }
         val intent = Intent()
         intent.setClass(
-            activity, HouseOrderDetailActivity::class.java
-//            if (activity?.getString(R.string.number_0).equals(orderType))
-//                HouseOrderDetailActivity::class.java
-//            else
-
-//                HouseOrderDetailActivity::class.java
+            activity,
+            if (activity?.getString(R.string.number_0).equals(orderType)) {
+                HouseOrderDetailActivity::class.java
+            } else {
+                RescueOrderDetailActivity::class.java
+            }
         )
         intent.putExtra(Constants.KEY_ORDER_TYPE, orderType)
         intent.putExtra(Constants.KEY_ORDER_ID, orderId)

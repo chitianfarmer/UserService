@@ -1,6 +1,5 @@
-package cn.eakay.service.orders.house
+package cn.eakay.service.orders.rescue
 
-import android.text.TextUtils
 import android.view.View
 import cn.eakay.service.R
 import cn.eakay.service.beans.OrderDetailBean
@@ -17,16 +16,15 @@ import java.util.ArrayList
 
 /**
  * @packageName: UserService
- * @fileName: HouseOrderDetailPresenter
+ * @fileName: RescueOrderDetailPresenter
  * @author: chitian
- * @date: 2019-07-19 08:57
+ * @date: 2019-07-20 10:25
  * @description:
  * @org: http://www.eakay.cn (芜湖恒天易开软件科技有限公司)
  *
  */
-class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
-
-    private var view: HouseOrderDetailContract.View? = null
+class RescueOrderDetailPresenter : RescueOrderDetailContract.Presenter {
+    private var view: RescueOrderDetailContract.View? = null
     private var pathList: ArrayList<PictureOrderMessage>? = ArrayList()
     private var bean: OrderDetailBean.DatasBean? = null
     private var infoListVos: List<OrderDetailBean.DatasBean.ServiceMoreBean>? = null
@@ -143,10 +141,9 @@ class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
                     view?.showCarAndUserInfo(carModelName, carNumber, telphone, extraDisc)
                     view?.showOrderAddressInfo(address, destination, sysDoorMoney)
                     view?.showOrderInfo(orderStatus, orderNumber, orderType)
-                    view?.showOrderDetail(createTime, serviceTime)
+                    view?.showOrderDetail(createTime, activity?.getString(R.string.start_immediately))
                     view?.showServiceNotes(serviceNotes)
                     view?.showServiceCashMoney(payMoney)
-                    view?.showSecondService(secondServiceTime, secondAddress)
                     view?.showPayList(hourMoney, materialMoney, totalMoney)
                     view?.showPayTime(payTime)
                     changViewStatus(orderStatus)
@@ -175,15 +172,11 @@ class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
 
     }
 
-    override fun startService(type: Int) {
-
-    }
-
     override fun startRescue() {
 
     }
 
-    override fun toUserHome(type: Int) {
+    override fun toRescueAddress() {
 
     }
 
@@ -192,10 +185,6 @@ class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
     }
 
     override fun orderComplete() {
-
-    }
-
-    override fun needSecondaryService() {
 
     }
 
@@ -210,7 +199,7 @@ class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
         return pathList!!
     }
 
-    override fun uploadPath(path: String) {
+    override fun uploadPath(path: String?) {
 
     }
 
@@ -230,8 +219,9 @@ class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
 
     }
 
-    override fun attachView(view: HouseOrderDetailContract.View) {
+    override fun attachView(view: RescueOrderDetailContract.View) {
         this.view = view
+
     }
 
     override fun detachView() {
@@ -246,23 +236,22 @@ class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
     private fun changViewStatus(status: String?) {
         val context = view?.getBaseActivity()
         if (context == null || bean == null) {
-            view?.hintServiceNotesView()
-            view?.hintServiceImagesView()
-            view?.hintTakePictureView()
             view?.showNumalView()
+            view?.hintServiceImagesView()
+            view?.hintServiceNotesView()
+            view?.hintTakePictureView()
             return
         }
         if (status.isNullOrEmpty()) {
+            view?.showNumalView()
             view?.hintServiceImagesView()
             view?.hintServiceNotesView()
             view?.hintTakePictureView()
-            view?.showNumalView()
             return
         }
         var reason = bean?.refuceReason
         var payTime = bean?.payTime
-        val serviceTime = bean?.secondServiceTime
-        if (TextUtils.isEmpty(reason)) {
+        if (reason.isNullOrEmpty()) {
             if (!listVos!!.isNullOrEmpty()) {
                 val vosBean = listVos!![0]
                 reason = vosBean.describle
@@ -271,13 +260,12 @@ class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
         }
         if (context.getString(R.string.number_0) == status) {
             /* 订单初始状态*/
-            view?.hintServiceNotesView()
             view?.showNumalView()
             view?.hintServiceImagesView()
+            view?.hintServiceNotesView()
             view?.hintTakePictureView()
         } else if (context.getString(R.string.number_1) == status) {
             /* 服务完支付完结束*/
-            view?.hintTakePictureView()
             view?.hintAllMenuView()
             view?.showServiceImagesView()
             if (reason.isNullOrEmpty()) {
@@ -285,10 +273,11 @@ class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
             } else {
                 view?.showServiceNotesView()
             }
+            view?.showServiceListMoneyView()
             if (!payTime.isNullOrEmpty()) {
                 view?.showPayTimeView()
             }
-            view?.showServiceListMoneyView()
+            view?.hintTakePictureView()
         } else if (context.getString(R.string.number_2) == status) {
             /* 等待用户支付上门费用*/
             view?.hintTakePictureView()
@@ -302,10 +291,10 @@ class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
             view?.showServiceCashCompleteView()
         } else if (context.getString(R.string.number_3) == status) {
             /* 等待系统安排车辆*/
-            view?.hintServiceImagesView()
-            view?.hintServiceNotesView()
-            view?.hintTakePictureView()
             view?.showNumalView()
+            view?.hintTakePictureView()
+            view?.hintServiceNotesView()
+            view?.hintServiceImagesView()
         } else if (context.getString(R.string.number_4) == status) {
             /* 车辆繁忙系统取消退款中*/
             view?.hintAllMenuView()
@@ -314,36 +303,34 @@ class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
             } else {
                 view?.showServiceNotesView()
             }
-            view?.hintServiceImagesView()
             view?.hintTakePictureView()
+            view?.hintServiceImagesView()
         } else if (context.getString(R.string.number_5) == status) {
             /* 等待工作人员出发*/
-            view?.hintServiceNotesView()
-            view?.hintTakePictureView()
             view?.hintServiceImagesView()
+            view?.hintTakePictureView()
             view?.showOrderStartServiceView()
-            view?.changeStartText(R.string.catch_to_the_door)
+            view?.hintServiceNotesView()
+            view?.changeStartText(R.string.departure_rescue)
+            view?.changeStartTextSize(16f)
         } else if (context.getString(R.string.number_6) == status) {
             /* 正在赶往目的地*/
-            view?.hintServiceNotesView()
-            view?.hintTakePictureView()
             view?.hintServiceImagesView()
+            view?.hintTakePictureView()
+            view?.hintServiceNotesView()
             view?.showOrderStartServiceView()
-            view?.changeStartText(R.string.start_service)
+            view?.changeStartText(R.string.start_rescue)
+            view?.changeStartTextSize(16f)
         } else if (context.getString(R.string.number_7) == status) {
             /* 服务中*/
-            if (serviceTime.isNullOrEmpty()) {
-                view?.showSecondServiceView()
-            } else {
-                view?.showOrderCompleteView()
-            }
             if (reason.isNullOrEmpty()) {
                 view?.hintServiceNotesView()
             } else {
                 view?.showServiceNotesView()
             }
-            view?.showTakePictureView()
+            view?.showOrderCompleteView()
             view?.showServiceImagesView()
+            view?.showTakePictureView()
         } else if (context.getString(R.string.number_8) == status) {
             /* 服务完毕等待支付费用*/
             view?.hintTakePictureView()
@@ -357,10 +344,10 @@ class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
             view?.showServiceCashCompleteView()
         } else if (context.getString(R.string.number_9) == status) {
             /* 超时支付上门费用取消结束*/
-            view?.hintAllMenuView()
-            view?.hintTakePictureView()
             view?.hintServiceImagesView()
             view?.hintServiceNotesView()
+            view?.hintAllMenuView()
+            view?.hintTakePictureView()
         } else if (context.getString(R.string.number_10) == status) {
             /* 客户主动取消退款中*/
             view?.hintAllMenuView()
@@ -369,25 +356,18 @@ class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
             view?.hintServiceNotesView()
         } else if (context.getString(R.string.number_11) == status) {
             /* 客户主动取消结束*/
-            view?.hintAllMenuView()
             view?.hintServiceImagesView()
-            view?.hintTakePictureView()
             view?.hintServiceNotesView()
+            view?.hintAllMenuView()
+            view?.hintTakePictureView()
         } else if (context.getString(R.string.number_12) == status) {
             /* 等待二次上门服务*/
-            if (pathList!!.isNullOrEmpty()) {
-                view?.hintServiceImagesView()
-            } else {
-                view?.showServiceImagesView()
-            }
+            view?.hintServiceImagesView()
+            view?.hintServiceNotesView()
             view?.showOrderStartServiceView()
-            view?.changeStartText(R.string.start_service)
+            view?.changeStartText(R.string.start_rescue)
+            view?.changeStartTextSize(16f)
             view?.hintTakePictureView()
-            if (reason.isNullOrEmpty()) {
-                view?.hintServiceNotesView()
-            } else {
-                view?.showServiceNotesView()
-            }
         } else if (context.getString(R.string.number_13) == status) {
             /* 车辆繁忙系统取消退款结束*/
             view?.hintAllMenuView()
@@ -400,16 +380,18 @@ class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
             view?.hintTakePictureView()
         } else if (context.getString(R.string.number_14) == status) {
             /* 救援核算上门服务费*/
-            view?.hintAllMenuView()
-            view?.hintServiceImagesView()
             view?.hintTakePictureView()
             view?.hintServiceNotesView()
+            view?.hintServiceImagesView()
+            view?.showOrderStartServiceView()
+            view?.changeStartText(R.string.on_site_service_fee_is_sent_to_the_user)
+            view?.changeStartTextSize(14f)
         } else if (context.getString(R.string.number_15) == status) {
             /* 客户取消后，等待支付救援上门服务费*/
-            view?.hintAllMenuView()
             view?.hintServiceImagesView()
-            view?.hintTakePictureView()
             view?.hintServiceNotesView()
+            view?.hintAllMenuView()
+            view?.hintTakePictureView()
         }
     }
 }

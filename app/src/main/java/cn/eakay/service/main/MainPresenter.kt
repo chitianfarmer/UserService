@@ -173,6 +173,7 @@ class MainPresenter : MainContract.Presenter, BdLocationHelper.EakayLocationCall
 
                 override fun failed(error: Throwable?) {
                     view?.hintLoadDialog()
+                    view?.resetUnLock()
                     val message = error?.message
                     view?.toast("下班失败，错误信息：$message")
                     LogUtils.loge("下班失败错误信息：$message")

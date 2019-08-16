@@ -43,36 +43,34 @@ class TokenInterceptor : Interceptor {
         val newRequest = getNewRequest(oldRequest)
         var response = chain.proceed(newRequest)
         val body = response.body
-        val resp = body?.string()
-        val result = resp.toString()
+        val source = body?.source()
+        source?.request(Long.MAX_VALUE)
+        val result = source?.buffer?.clone()?.readUtf8()
         val jsonObject = JSONObject.parseObject(result)
         val errorCode = jsonObject.getString(Constants.KEY_REQUEST_ERROR_CODE)
         val errorMSg = jsonObject.getString(Constants.KEY_REQUEST_ERROR_MSG)
-        when (errorCode) {
-            Constants.KEY_REQUEST_SUCCESSED_CODE -> {
-                response = chain.proceed(newRequest)
-            }
-            Constants.KEY_REQUEST_LOGIN_OTHER_CODE -> {
-                EventBus.getDefault().post(
-                    OtherLoginMessage(
-                        Constants.KEY_REQUEST_LOGIN_OTHER_CODE, EakayApplication.instance!!.getString(
-                            R.string.reLogin
-                        )
+        if (Constants.KEY_REQUEST_LOGIN_OTHER_CODE == errorCode){
+            EventBus.getDefault().post(
+                OtherLoginMessage(
+                    Constants.KEY_REQUEST_LOGIN_OTHER_CODE, EakayApplication.instance!!.getString(
+                        R.string.reLogin
                     )
                 )
-            }
-            Constants.KEY_REQUEST_TOKEN_CODE -> {
-                refreshToken()
-                val build = getNewRequest(oldRequest)
-                response = chain.proceed(build)
-            }
-            else -> {
-                Looper.prepare()
-                val resultError = ErrorManager.checkResultError(errorCode, errorMSg)
-                ToastUtils.showShort(resultError!!)
-                LogUtils.loge("token拦截器请求失败：$resultError")
-                Looper.loop()
-            }
+            )
+            return response
+        }
+        if (Constants.KEY_REQUEST_TOKEN_CODE == errorCode){
+            refreshToken()
+            val build = getNewRequest(oldRequest)
+            return chain.proceed(build)
+        }
+        if (Constants.KEY_REQUEST_SUCCESSED_CODE != errorCode){
+            Looper.prepare()
+            val resultError = ErrorManager.checkResultError(errorCode, errorMSg)
+            ToastUtils.showShort(resultError!!)
+            LogUtils.loge("token拦截器请求失败：$resultError")
+            Looper.loop()
+            return response
         }
         return response
     }

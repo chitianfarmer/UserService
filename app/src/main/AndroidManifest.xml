@@ -116,6 +116,10 @@
         <activity android:name=".orders.house.HouseOrderDetailActivity"
                   android:launchMode="singleTask"
                   android:screenOrientation="portrait"/>
+        <!--救援订单详情-->
+        <activity android:name=".orders.rescue.RescueOrderDetailActivity"
+                  android:launchMode="singleTask"
+                  android:screenOrientation="portrait"/>
 
 
         <!--百度地图正式环境-->
