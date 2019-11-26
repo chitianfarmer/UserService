@@ -7,8 +7,8 @@ import cn.eakay.service.beans.OrderDetailBean
 import cn.eakay.service.beans.PictureMessage
 import cn.eakay.service.beans.PictureOrderMessage
 import cn.eakay.service.network.ApiUtils
-import cn.eakay.service.network.ResultListener
-import cn.eakay.service.network.ResultObserver
+import cn.eakay.service.network.listener.ResultListener
+import cn.eakay.service.network.listener.ResultObserver
 import cn.eakay.service.utils.StringUtils
 import com.alibaba.fastjson.JSONObject
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -45,7 +45,8 @@ class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
         val observable = ApiUtils.instance.service.getOrderDetailInfo(body)
         observable.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(ResultObserver(object : ResultListener<OrderDetailBean> {
+            .subscribe(ResultObserver(object :
+                ResultListener<OrderDetailBean> {
                 override fun success(result: OrderDetailBean) {
                     view?.hintLoadDialog()
                     val bean = result.getDatas()

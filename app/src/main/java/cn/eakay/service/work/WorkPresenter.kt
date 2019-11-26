@@ -7,8 +7,8 @@ import cn.eakay.service.base.Constants
 import cn.eakay.service.beans.WorkBean
 import cn.eakay.service.main.MainActivity
 import cn.eakay.service.network.ApiUtils
-import cn.eakay.service.network.ResultListener
-import cn.eakay.service.network.ResultObserver
+import cn.eakay.service.network.listener.ResultListener
+import cn.eakay.service.network.listener.ResultObserver
 import cn.eakay.service.utils.StringUtils
 import com.alibaba.fastjson.JSONObject
 import com.changyoubao.vipthree.base.LSPUtils
@@ -45,7 +45,8 @@ class WorkPresenter : WorkContract.Presenter {
         val observable = ApiUtils.instance.service.onLineWork(body)
         observable.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(ResultObserver(object : ResultListener<WorkBean> {
+            .subscribe(ResultObserver(object :
+                ResultListener<WorkBean> {
                 override fun success(result: WorkBean) {
                     view?.hintLoadDialog()
                     LSPUtils.put(Constants.KEY_IS_USER_WORK, true)

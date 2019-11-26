@@ -10,10 +10,10 @@ import cn.eakay.service.base.Constants
 import cn.eakay.service.beans.AuthTokenBean
 import cn.eakay.service.main.MainActivity
 import cn.eakay.service.network.ApiUtils
-import cn.eakay.service.network.ResultListener
-import cn.eakay.service.network.ResultObserver
+import cn.eakay.service.network.listener.ResultListener
+import cn.eakay.service.network.listener.ResultObserver
 import cn.eakay.service.sign.SignInActivity
-import cn.eakay.service.utils.SecurityUtils
+import cn.eakay.service.utils.MD5Utils
 import cn.eakay.service.utils.StringUtils
 import cn.eakay.service.work.WorkActivity
 import com.alibaba.fastjson.JSONObject
@@ -82,13 +82,14 @@ class SplashFragment : BaseFragment() {
             param["secret"] = Constants.APP_SECRET
             param["timestamp"] = timeMillis
             param["deviceToken"] = ""
-            param["sign"] = SecurityUtils.MD5(Constants.APP_KEY + Constants.APP_SECRET + timeMillis)
+            param["sign"] = MD5Utils.MD5(Constants.APP_KEY + Constants.APP_SECRET + timeMillis)
             val body = StringUtils.createBody(param)
             val authToken = ApiUtils.instance.service.checkNoLoginAuthToken(body)
             authToken.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ResultObserver(
-                    object : ResultListener<AuthTokenBean> {
+                    object :
+                        ResultListener<AuthTokenBean> {
                         override fun success(result: AuthTokenBean) {
                             val errCode = result.getErrCode()
                             val errMsg = result.getErrMsg()
@@ -148,7 +149,7 @@ class SplashFragment : BaseFragment() {
      */
     private fun goToMain() {
         val intent = Intent(activity!!, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         startActivity(intent)
         activity!!.finish()
     }
@@ -160,7 +161,7 @@ class SplashFragment : BaseFragment() {
      */
     private fun goToSign() {
         val intent = Intent(activity!!, SignInActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         startActivity(intent)
         activity!!.finish()
     }
@@ -172,7 +173,7 @@ class SplashFragment : BaseFragment() {
      */
     private fun goToWork() {
         val intent = Intent(activity!!, WorkActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         startActivity(intent)
         activity!!.finish()
     }

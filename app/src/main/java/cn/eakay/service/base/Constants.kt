@@ -41,9 +41,9 @@ object Constants {
      */
     const val KEY_SUCCESS_DATAS = "datas"
     const val KEY_REQUEST_FAILED_CODE = "1"
-    const val KEY_REQUEST_SUCCESSED_CODE = "0"
-    const val KEY_REQUEST_DATAS_CHANGE_CODE = "-1"
-    const val KEY_REQUEST_DATAS_EMPTY_CODE = "-2"
+    const val KEY_REQUEST_SUCCESS_CODE = "0"
+    const val KEY_REQUEST_DATA_CHANGE_CODE = "-1"
+    const val KEY_REQUEST_DATA_EMPTY_CODE = "-2"
 
     const val KEY_REQUEST_LOGIN_OTHER_CODE = "1201040005"
     const val KEY_REQUEST_USER_NOT_EXIT_CODE = "1201040006"

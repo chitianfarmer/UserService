@@ -1,11 +1,11 @@
 package cn.eakay.service.main
 
 import android.Manifest
+import android.app.Activity
 import android.os.Bundle
 import cn.eakay.service.R
 import cn.eakay.service.base.BaseActivity
 import cn.eakay.service.utils.PermissionUtils
-import kotlinx.android.synthetic.main.activity_base_title.*
 
 /**
  * @packageName: UserService
@@ -45,4 +45,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    override fun exitApplication(context: Activity) {
+        super.exitApplication(context)
+    }
 }

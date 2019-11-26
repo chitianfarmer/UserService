@@ -1,5 +1,6 @@
-package cn.eakay.service.network
+package cn.eakay.service.network.listener
 
+import cn.eakay.service.network.transformer.SubscriptionManager
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 

@@ -1,18 +1,11 @@
 package cn.eakay.service.network
 
 import cn.eakay.service.BuildConfig
-import cn.eakay.service.base.Constants
-import cn.eakay.service.beans.BaseResponse
-import cn.eakay.service.beans.DeviceTokenBean
-import cn.eakay.service.utils.ErrorManager
-import com.changyoubao.vipthree.base.LSPUtils
-import com.shs.easywebviewsupport.utils.LogUtils
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.internal.schedulers.NewThreadScheduler
-import io.reactivex.schedulers.Schedulers
+import cn.eakay.service.network.interceptor.ErrorInterceptor
+import cn.eakay.service.network.interceptor.HeaderInterceptor
+import cn.eakay.service.network.interceptor.LogInterceptor
+import cn.eakay.service.network.interceptor.TokenInterceptor
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -39,9 +32,6 @@ class ApiUtils private constructor() {
     }
 
     fun init() {
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level =
-            if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
         val okHttpClient = OkHttpClient()
             .newBuilder()
             .connectTimeout(20, TimeUnit.SECONDS)
@@ -50,9 +40,10 @@ class ApiUtils private constructor() {
             /*失败重连*/
             .retryOnConnectionFailure(true)
             /*添加拦截器*/
-            .addInterceptor(interceptor)
             .addInterceptor(HeaderInterceptor())
             .addInterceptor(TokenInterceptor())
+            .addInterceptor(ErrorInterceptor())
+            .addInterceptor(LogInterceptor())
             .build()
         val retrofit = Retrofit
             .Builder()

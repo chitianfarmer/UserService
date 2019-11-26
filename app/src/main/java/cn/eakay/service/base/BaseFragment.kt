@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import cn.eakay.service.network.SubscriptionManager
+import cn.eakay.service.network.transformer.SubscriptionManager
 
 /**
  * @packageName: UserService

@@ -1,4 +1,4 @@
-package cn.eakay.service.network
+package cn.eakay.service.network.transformer
 
 import io.reactivex.disposables.Disposable
 

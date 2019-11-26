@@ -8,9 +8,8 @@ import cn.eakay.service.R
 import cn.eakay.service.base.Constants
 import cn.eakay.service.base.EakayApplication
 import cn.eakay.service.network.ApiUtils
-import cn.eakay.service.network.ResultListener
-import cn.eakay.service.network.ResultObserver
-import cn.eakay.service.sign.SignInActivity
+import cn.eakay.service.network.listener.ResultListener
+import cn.eakay.service.network.listener.ResultObserver
 import cn.eakay.service.tabs.TabFragment
 import cn.eakay.service.utils.BdLocationHelper
 import cn.eakay.service.utils.PermissionUtils
@@ -161,7 +160,8 @@ class MainPresenter : MainContract.Presenter, BdLocationHelper.EakayLocationCall
         val observable = ApiUtils.instance.service.offLineWork(body)
         observable.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(ResultObserver(object : ResultListener<JSONObject> {
+            .subscribe(ResultObserver(object :
+                ResultListener<JSONObject> {
                 override fun success(result: JSONObject) {
                     LSPUtils.put(Constants.KEY_IS_USER_WORK, false)
                     EakayApplication.instance?.finishAllActivity()

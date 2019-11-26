@@ -44,7 +44,7 @@ object ErrorManager {
                 ToastUtils.showShort(R.string.the_submitted_invitation_code_does_not_exist)
                 msg = EakayApplication.instance!!.getString(R.string.the_submitted_invitation_code_does_not_exist)
             }
-            Constants.KEY_REQUEST_418_CODE, Constants.KEY_REQUEST_DATAS_EMPTY_CODE, Constants.KEY_REQUEST_DATAS_CHANGE_CODE
+            Constants.KEY_REQUEST_418_CODE, Constants.KEY_REQUEST_DATA_EMPTY_CODE, Constants.KEY_REQUEST_DATA_CHANGE_CODE
             -> {
                 ToastUtils.showShort(R.string.request_failed)
                 msg = EakayApplication.instance!!.getString(R.string.request_failed)

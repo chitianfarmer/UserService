@@ -1,4 +1,4 @@
-package cn.eakay.service.network
+package cn.eakay.service.network.transformer
 
 import io.reactivex.disposables.Disposable
 import java.util.*
@@ -14,10 +14,12 @@ import io.reactivex.disposables.CompositeDisposable
  * @org: http://www.eakay.cn (芜湖恒天易开软件科技有限公司)
  *
  */
-class SubscriptionManager : SubscriptionHelper<Objects> {
+class SubscriptionManager :
+    SubscriptionHelper<Objects> {
 
     companion object {
-        val instance: SubscriptionManager = SubscriptionManager()
+        val instance: SubscriptionManager =
+            SubscriptionManager()
         private val mDisposables: CompositeDisposable = CompositeDisposable()
     }
 

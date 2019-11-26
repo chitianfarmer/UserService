@@ -14,8 +14,7 @@ import java.security.MessageDigest;
 /**
  * 加密解密辅助类.
  *
- * @author xiachengyun xiachengyun@baizhu.cc
- * @version V1.0
+ * @author chitian
  */
 public class SecurityUtils {
     /**

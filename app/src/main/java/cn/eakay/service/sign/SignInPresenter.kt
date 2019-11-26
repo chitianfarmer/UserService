@@ -8,13 +8,11 @@ import cn.eakay.service.base.Constants
 import cn.eakay.service.beans.AuthTokenBean
 import cn.eakay.service.beans.DeviceTokenBean
 import cn.eakay.service.beans.LoginAndRegisterBean
-import cn.eakay.service.main.MainActivity
 import cn.eakay.service.network.ApiUtils
-import cn.eakay.service.network.ResultListener
-import cn.eakay.service.network.ResultObserver
-import cn.eakay.service.network.SubscriptionManager
+import cn.eakay.service.network.listener.ResultListener
+import cn.eakay.service.network.listener.ResultObserver
 import cn.eakay.service.utils.ErrorManager
-import cn.eakay.service.utils.SecurityUtils
+import cn.eakay.service.utils.MD5Utils
 import cn.eakay.service.utils.StringUtils
 import cn.eakay.service.work.WorkActivity
 import com.alibaba.fastjson.JSONObject
@@ -92,7 +90,8 @@ class SignInPresenter : SignInContract.Presenter {
         signIn.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(ResultObserver(
-                object : ResultListener<LoginAndRegisterBean> {
+                object :
+                    ResultListener<LoginAndRegisterBean> {
                     override fun success(result: LoginAndRegisterBean) {
                         when (result.getErrCode()) {
                             "0" -> {
@@ -132,7 +131,8 @@ class SignInPresenter : SignInContract.Presenter {
         deviceToken.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(ResultObserver(
-                object : ResultListener<DeviceTokenBean> {
+                object :
+                    ResultListener<DeviceTokenBean> {
                     override fun success(result: DeviceTokenBean) {
                         when (val code = result.getErrCode()) {
                             "0" -> {
@@ -171,12 +171,13 @@ class SignInPresenter : SignInContract.Presenter {
             param["deviceToken"] = deviceToken
         }
         param["sign"] =
-            SecurityUtils.MD5(Constants.APP_KEY + Constants.APP_SECRET + (if (TextUtils.isEmpty(deviceToken)) "" else deviceToken) + timeMillis)
+            MD5Utils.MD5(Constants.APP_KEY + Constants.APP_SECRET + (if (TextUtils.isEmpty(deviceToken)) "" else deviceToken) + timeMillis)
         val body = StringUtils.createBody(param)
         val authToken = ApiUtils.instance.service.refreshLoginAuthToken(body)
         authToken.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(ResultObserver(object : ResultListener<AuthTokenBean> {
+            .subscribe(ResultObserver(object :
+                ResultListener<AuthTokenBean> {
                 override fun success(result: AuthTokenBean) {
                     view?.hintLoadDialog()
                     val errCode = result.getErrCode()

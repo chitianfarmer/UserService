@@ -6,8 +6,8 @@ import cn.eakay.service.R
 import cn.eakay.service.base.Constants
 import cn.eakay.service.beans.TabOrderListBean
 import cn.eakay.service.network.ApiUtils
-import cn.eakay.service.network.ResultListener
-import cn.eakay.service.network.ResultObserver
+import cn.eakay.service.network.listener.ResultListener
+import cn.eakay.service.network.listener.ResultObserver
 import cn.eakay.service.orders.house.HouseOrderDetailActivity
 import cn.eakay.service.orders.rescue.RescueOrderDetailActivity
 import cn.eakay.service.utils.ErrorManager
@@ -62,7 +62,8 @@ class TabPresenter : TabContract.Presenter {
         val orderList = ApiUtils.instance.service.requestOrderList(body)
         orderList.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(ResultObserver(object : ResultListener<TabOrderListBean> {
+            .subscribe(ResultObserver(object :
+                ResultListener<TabOrderListBean> {
                 override fun success(result: TabOrderListBean) {
                     when (result.getErrCode()) {
                         "0" -> {

@@ -22,13 +22,15 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import cn.eakay.service.R
-import cn.eakay.service.network.SubscriptionManager
-import cn.eakay.service.utils.RomUtils
-import cn.eakay.service.utils.SystemBarUtils
-import cn.eakay.service.utils.ToastUtils
-import cn.eakay.service.utils.ViewUtils
+import cn.eakay.service.beans.ErrorMessages
+import cn.eakay.service.beans.OtherLoginMessage
+import cn.eakay.service.network.transformer.SubscriptionManager
+import cn.eakay.service.sign.SignInActivity
+import cn.eakay.service.utils.*
 import cn.eakay.service.widget.EToolbar
-import java.util.ArrayList
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import java.util.*
 
 /**
  * @packageName: UserService
@@ -43,7 +45,10 @@ abstract class BaseActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListen
     private val INVALID_CONTENT_ID: Int = -1
     private var view: View? = null
     var mToolbar: EToolbar? = null
-
+    /**
+     * 是否显示了其他登录人登录的弹窗
+     */
+    private var isShow: Boolean? = false
     /**
      * 退出程序.
      *
@@ -425,5 +430,64 @@ abstract class BaseActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListen
             finish()
         }
         lastTimeStamp = currentTimeStamp
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    open fun onErrorMessage(messages: ErrorMessages?) {
+        if (messages != null) {
+            runOnUiThread {
+                closeProgress()
+                val errorCode: String = messages.code
+                val errorMsg: String = messages.message
+                ErrorManager.checkResultError(errorCode, errorMsg)
+            }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    open fun onOtherLogin(message: OtherLoginMessage?) {
+        if (message != null) {
+            val code: String = message.code
+            if (TextUtils.equals(Constants.KEY_REQUEST_LOGIN_OTHER_CODE, code)) {
+                showOtherLogin()
+            }
+        }
+    }
+
+    /**
+     * 显示其他人登录的弹窗
+     */
+    private fun showOtherLogin() {
+        if (isShow!!) {
+            return
+        }
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(R.string.tips)
+        builder.setMessage(R.string.reLogin)
+        builder.setPositiveButton(R.string.dialog_positive_button_text) { dialog, _ ->
+            run {
+                dialog.dismiss()
+                isShow = false
+                goToSign()
+            }
+        }
+        val dialog = builder.create()
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
+        dialog.show()
+        isShow = true
+    }
+
+    /**
+     * 进入登录界面
+     *
+     * @author pjc
+     */
+    private fun goToSign() {
+        EakayApplication.instance!!.finishAllActivity()
+        val intent = Intent(this, SignInActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+        startActivity(intent)
+        finish()
     }
 }
