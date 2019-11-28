@@ -122,7 +122,7 @@
     <string name="swipe_off_work_and_log_out">滑动下班退出登录</string>
     <string name="incorrect_employee_information">员工信息有误，请查验后再试</string>
     <!--主页面-->
-    <string name="pending_reception">待接待</string>
+    <string name="pending_reception">待接单</string>
     <string name="pending">待完成</string>
     <string name="to_be_paid">待支付</string>
     <string name="cancelled">已取消</string>

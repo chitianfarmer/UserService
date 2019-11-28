@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:background="@color/base_activity_bg"
+        android:orientation="vertical">
+
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:descendantFocusability="blocksDescendants"
+            android:fillViewport="true"
+            android:filterTouchesWhenObscured="true"
+            android:focusableInTouchMode="true"
+            android:scrollbars="vertical">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height"
+                    android:layout_gravity="center|left"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/item_height_10"
+                    android:paddingRight="@dimen/item_height_10"
+                    android:text="@string/choose_service_time"
+                    android:textColor="@color/refund_title_color"
+                    android:textSize="14sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height_245"
+                    android:background="@color/white" />
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height"
+                    android:layout_gravity="center|left"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/item_height_10"
+                    android:paddingRight="@dimen/item_height_10"
+                    android:text="@string/manually_explain_service_time"
+                    android:textColor="@color/refund_title_color"
+                    android:textSize="14sp" />
+
+            <EditText
+                    android:id="@+id/edt_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height_50"
+                    android:background="@color/white"
+                    android:hint="@string/input_content"
+                    android:inputType="textVisiblePassword"
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/item_height_10"
+                    android:paddingRight="@dimen/item_height_10"
+                    android:textColor="@color/text_sign_in_color"
+                    android:textColorHint="@color/edit_verify_text_hint_color"
+                    android:textCursorDrawable="@drawable/bg_curse"
+                    android:textSize="16sp" />
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height"
+                    android:layout_gravity="center|left"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/item_height_10"
+                    android:paddingRight="@dimen/item_height_10"
+                    android:text="@string/secondary_home_service_address"
+                    android:textColor="@color/refund_title_color"
+                    android:textSize="14sp" />
+
+            <TextView
+                    android:id="@+id/tv_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|left"
+                    android:background="@color/white"
+                    android:gravity="center|left"
+                    android:hint="@string/please_select_a_secondary_service_address"
+                    android:maxLines="2"
+                    android:minHeight="@dimen/item_height_50"
+                    android:paddingLeft="@dimen/item_height_10"
+                    android:paddingRight="@dimen/item_height_10"
+                    android:textColor="@color/text_sign_in_color"
+                    android:textColorHint="@color/edit_verify_text_hint_color"
+                    android:textCursorDrawable="@drawable/bg_curse"
+                    android:textSize="16sp" />
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height"
+                    android:layout_gravity="center|left"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/item_height_10"
+                    android:paddingRight="@dimen/item_height_10"
+                    android:text="@string/fill_in_the_reason_note"
+                    android:textColor="@color/refund_title_color"
+                    android:textSize="14sp" />
+
+            <EditText
+                    android:id="@+id/edt_reason"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height_130"
+                    android:layout_gravity="center|left|top"
+                    android:background="@color/white"
+                    android:gravity="left|center|top"
+                    android:hint="@string/input_content"
+                    android:padding="@dimen/item_height_10"
+                    android:textColor="@color/text_sign_in_color"
+                    android:textColorHint="@color/edit_verify_text_hint_color"
+                    android:textCursorDrawable="@drawable/bg_curse"
+                    android:textSize="16sp" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height_50">
+
+        <TextView
+                android:id="@+id/tv_submit"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center"
+                android:background="@color/unable_to_serve_color"
+                android:gravity="center"
+                android:paddingLeft="@dimen/item_height_10"
+                android:paddingRight="@dimen/item_height_10"
+                android:text="@string/secondary_door_to_door_service_confirmation_with_user"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+    </RelativeLayout>
+</LinearLayout>

@@ -5,7 +5,9 @@ import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
 import cn.eakay.service.R
+import cn.eakay.service.base.Constants
 import cn.eakay.service.base.EakayApplication
+import cn.eakay.service.beans.messages.LocationMessage
 import com.baidu.location.BDAbstractLocationListener
 import com.baidu.location.BDLocation
 import com.baidu.location.LocationClient
@@ -35,14 +37,19 @@ class BdLocationHelper {
      * 定位监听
      */
     private var listener: EakayBdLocationListener? = null
-    private var callBackListener: EakayLocationCallBackListener? = null
-    companion object{
-        val instance = BdLocationHelper()
+
+    companion object {
+        @Synchronized
+        fun getInstance(): BdLocationHelper {
+            return BdLocationHelper()
+        }
     }
-    constructor(){
+
+    constructor() {
         initClient()
         initMapClientOpts()
     }
+
     private fun initClient() {
         if (mLocationClient == null) {
             mLocationClient = LocationClient(EakayApplication.instance!!)
@@ -78,7 +85,9 @@ class BdLocationHelper {
         option.SetIgnoreCacheException(false)
         //可选，默认false，设置是否需要过滤GPS仿真结果，默认需要
         option.setEnableSimulateGps(false)
-        mLocationClient!!.setLocOption(option)
+        /*打开位置变化自动回调*/
+        option.setOpenAutoNotifyMode(5000, 1, LocationClientOption.LOC_SENSITIVITY_HIGHT)
+        mLocationClient!!.locOption = option
         // 注册监听函数
         mLocationClient!!.registerLocationListener(listener)
     }
@@ -115,21 +124,15 @@ class BdLocationHelper {
                 return
             }
             LogUtils.loge("----定位成功:" + bdLocation.addrStr)
-            /**
-             * 定位成功的回调
-             */
-            if (callBackListener != null) {
-                if (isLocSuccessfully(bdLocation)) {
-                    EakayApplication.instance!!.setLocationCity(bdLocation.city)
-                    EakayApplication.instance!!.setCityCode(bdLocation.cityCode)
-                    val latLng = LatLng(bdLocation.latitude, bdLocation.longitude)
-                    EakayApplication.instance!!.setLocationLatlng(latLng)
-                    callBackListener!!.onHasLocation(bdLocation)
-                } else {
-                    callBackListener!!.onLocationFailed(EakayApplication.instance!!.getString(R.string.location_failed))
-                }
+            if (isLocSuccessfully(bdLocation)) {
+                EakayApplication.instance!!.setLocationCity(bdLocation.city)
+                EakayApplication.instance!!.setCityCode(bdLocation.cityCode)
+                val latLng = LatLng(bdLocation.latitude, bdLocation.longitude)
+                EakayApplication.instance!!.setLocationLatlng(latLng)
+                EventBus.getDefault().post(LocationMessage(Constants.NUMBER_ZERO, bdLocation))
+            } else {
+                EventBus.getDefault().post(LocationMessage(Constants.NUMBER_ONE, null))
             }
-            EventBus.getDefault().post(bdLocation)
             /**
              * 避免多次定位 调用stop方法
              */
@@ -137,32 +140,6 @@ class BdLocationHelper {
                 mLocationClient!!.stop()
             }
         }
-    }
-
-    /**
-     * 百度地图定位回调
-     */
-    interface EakayLocationCallBackListener {
-        /**
-         * 有定位信息
-         *
-         * @param bdLocation
-         */
-        fun onHasLocation(bdLocation: BDLocation)
-
-        /**
-         * 定位失败
-         */
-        fun onLocationFailed(msg: String)
-    }
-
-    /**
-     * 设置定位回调的监听
-     *
-     * @param callBackListener
-     */
-    fun setEakayLocationCallBackListener(callBackListener: EakayLocationCallBackListener) {
-        this.callBackListener = callBackListener
     }
 
     fun isLocSuccessfully(location: BDLocation): Boolean {
@@ -176,13 +153,16 @@ class BdLocationHelper {
      */
     fun isLocationEnabled(ctx: Context): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            try {
+            return try {
                 val locationMode =
-                    Settings.Secure.getInt(ctx.applicationContext.contentResolver, Settings.Secure.LOCATION_MODE)
-                return locationMode != Settings.Secure.LOCATION_MODE_OFF
+                    Settings.Secure.getInt(
+                        ctx.applicationContext.contentResolver,
+                        Settings.Secure.LOCATION_MODE
+                    )
+                locationMode != Settings.Secure.LOCATION_MODE_OFF
             } catch (e: Settings.SettingNotFoundException) {
                 e.printStackTrace()
-                return false
+                false
             }
 
         } else {

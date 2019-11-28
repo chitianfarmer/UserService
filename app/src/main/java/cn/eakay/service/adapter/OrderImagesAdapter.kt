@@ -7,7 +7,7 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import cn.eakay.service.R
 import cn.eakay.service.base.Constants
-import cn.eakay.service.beans.PictureOrderMessage
+import cn.eakay.service.beans.messages.PictureOrderMessage
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 

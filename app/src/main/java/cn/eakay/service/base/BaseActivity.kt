@@ -1,7 +1,7 @@
 package cn.eakay.service.base
 
 import android.app.Activity
-import android.content.DialogInterface
+import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -16,18 +16,18 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.annotation.NonNull
 import androidx.annotation.Nullable
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import cn.eakay.service.R
-import cn.eakay.service.beans.ErrorMessages
-import cn.eakay.service.beans.OtherLoginMessage
-import cn.eakay.service.network.transformer.SubscriptionManager
+import cn.eakay.service.beans.messages.ErrorMessages
+import cn.eakay.service.beans.messages.OtherLoginMessage
 import cn.eakay.service.sign.SignInActivity
 import cn.eakay.service.utils.*
 import cn.eakay.service.widget.EToolbar
+import cn.eakay.service.widget.LoadDialog
+import cn.eakay.service.widget.LoginDialog
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
@@ -42,7 +42,8 @@ import java.util.*
  *
  */
 abstract class BaseActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
-    private val INVALID_CONTENT_ID: Int = -1
+    private var loadDialog: LoadDialog? = null
+    val INVALID_CONTENT_ID: Int = -1
     private var view: View? = null
     var mToolbar: EToolbar? = null
     /**
@@ -175,7 +176,6 @@ abstract class BaseActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListen
 
     override fun onDestroy() {
         super.onDestroy()
-        SubscriptionManager.instance.cancelAll()
         EakayApplication.instance!!.removeActivity(this)
 
     }
@@ -193,11 +193,26 @@ abstract class BaseActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListen
     }
 
     open fun showProgress() {
-
+        val builder = LoadDialog.Builder(this)
+        if (loadDialog == null) {
+            loadDialog = builder.create()
+            loadDialog!!.window!!.setWindowAnimations(R.style.dialog_router)
+        }
+        if (!isFinishing && !loadDialog!!.isShowing) {
+            loadDialog!!.show()
+        }
     }
 
     open fun closeProgress() {
-
+        if (loadDialog == null) {
+            return
+        }
+        try {
+            loadDialog?.dismiss()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        loadDialog = null
     }
 
     /**
@@ -280,15 +295,20 @@ abstract class BaseActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListen
                 //判断用户先前是否拒绝过该权限申请，如果为true，我们可以向用户解释为什么使用该权限
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
                     //这里的dialog可以自定义
-                    val builder = AlertDialog.Builder(this)
+                    val builder = LoginDialog.Builder(this)
                     builder.setMessage(reason)
-                    builder.setPositiveButton(
-                        getString(R.string.i_know)
-                    ) { dialog, _ ->
-                        dialog.dismiss()
-                        requestPermission(arrayOf(permission))
-                    }
+                    builder.setGravity(LoginDialog.Builder.MESSAGE_CENTER_GRAVITY)
+                    builder.setPositiveButton(R.string.i_know)
+                    builder.setOnDialogClickListener(object : LoginDialog.OnDialogClickListener {
+                        override fun onConfirmClick(dialog: Dialog?, which: Int) {
+                            dialog?.dismiss()
+                            requestPermission(arrayOf(permission))
+                        }
 
+                        override fun onCancelClick(dialog: Dialog?, which: Int) {
+                            dialog?.dismiss()
+                        }
+                    })
                     val mDialog = builder.create()
                     mDialog.setCancelable(false)
                     mDialog.show()
@@ -306,7 +326,7 @@ abstract class BaseActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListen
      * 多个权限的检查
      */
     fun checkPermissions(@NonNull vararg permissions: String) {
-        if (Build.VERSION.SDK_INT < 23) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return
         }
         //用于记录权限申请被拒绝的权限集合
@@ -392,14 +412,22 @@ abstract class BaseActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListen
     }
 
     open fun showPermissionSettingsDialog(@NonNull permissions: Array<String>, @NonNull grantResults: IntArray) {
-        val builder = AlertDialog.Builder(this)
+        val builder = LoginDialog.Builder(this)
         builder.setMessage(R.string.lack_of_necessary_permissions)
-        builder.setNegativeButton(R.string.dialog_negative_button_text) { dialog, _ -> dialog.dismiss() }
-        builder.setPositiveButton(R.string.go_to_set) { dialog, _ ->
-            dialog.dismiss()
-            jump2PermissionSettings()
-        }
+        builder.setGravity(LoginDialog.Builder.MESSAGE_CENTER_GRAVITY)
+        builder.setNegativeButton(R.string.dialog_negative_button_text)
+        builder.setPositiveButton(R.string.go_to_set)
+        builder.setOnDialogClickListener(object : LoginDialog.OnDialogClickListener {
+            override fun onConfirmClick(dialog: Dialog?, which: Int) {
+                dialog?.dismiss()
+                jump2PermissionSettings()
+            }
 
+            override fun onCancelClick(dialog: Dialog?, which: Int) {
+                dialog?.dismiss()
+            }
+
+        })
         val mDialog = builder.create()
         mDialog.setCancelable(false)
         mDialog.show()
@@ -461,16 +489,23 @@ abstract class BaseActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListen
         if (isShow!!) {
             return
         }
-        val builder = AlertDialog.Builder(this)
+        val builder = LoginDialog.Builder(this)
         builder.setTitle(R.string.tips)
         builder.setMessage(R.string.reLogin)
-        builder.setPositiveButton(R.string.dialog_positive_button_text) { dialog, _ ->
-            run {
-                dialog.dismiss()
+        builder.setGravity(LoginDialog.Builder.MESSAGE_CENTER_GRAVITY)
+        builder.setPositiveButton(R.string.dialog_positive_button_text)
+        builder.setOnDialogClickListener(object : LoginDialog.OnDialogClickListener {
+            override fun onConfirmClick(dialog: Dialog?, which: Int) {
+                dialog?.dismiss()
                 isShow = false
                 goToSign()
             }
-        }
+
+            override fun onCancelClick(dialog: Dialog?, which: Int) {
+                dialog?.dismiss()
+            }
+
+        })
         val dialog = builder.create()
         dialog.setCanceledOnTouchOutside(false)
         dialog.setCancelable(false)

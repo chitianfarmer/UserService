@@ -1,15 +1,12 @@
 package cn.eakay.service.network.interceptor
 
 import android.annotation.SuppressLint
-import cn.eakay.service.R
 import cn.eakay.service.base.Constants
-import cn.eakay.service.base.EakayApplication
-import cn.eakay.service.beans.AuthTokenBean
-import cn.eakay.service.beans.ErrorMessages
-import cn.eakay.service.beans.OtherLoginMessage
+import cn.eakay.service.beans.response.AuthTokenBean
 import cn.eakay.service.network.ApiUtils
 import cn.eakay.service.network.listener.ResultListener
 import cn.eakay.service.network.listener.ResultObserver
+import cn.eakay.service.network.transformer.SchedulerProvider
 import cn.eakay.service.utils.ErrorManager
 import cn.eakay.service.utils.MD5Utils
 import cn.eakay.service.utils.StringUtils
@@ -21,7 +18,6 @@ import io.reactivex.schedulers.Schedulers
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import org.greenrobot.eventbus.EventBus
 
 
 /**
@@ -88,8 +84,7 @@ class TokenInterceptor : Interceptor {
             MD5Utils.MD5(Constants.APP_KEY + Constants.APP_SECRET + (if (deviceToken.isEmpty()) "" else deviceToken) + timeMillis)
         val body = StringUtils.createBody(param)
         val authToken = ApiUtils.instance.service.refreshLoginAuthToken(body)
-        authToken.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        authToken.compose(SchedulerProvider.instance.applySchedulers())
             .subscribe(ResultObserver(
                 object :
                     ResultListener<AuthTokenBean> {

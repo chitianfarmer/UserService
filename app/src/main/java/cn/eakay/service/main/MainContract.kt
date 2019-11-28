@@ -3,6 +3,7 @@ package cn.eakay.service.main
 import androidx.fragment.app.Fragment
 import cn.eakay.service.base.BasePresenter
 import cn.eakay.service.base.BaseView
+import cn.eakay.service.beans.messages.LocationMessage
 import com.alibaba.fastjson.JSONObject
 import java.util.ArrayList
 
@@ -91,5 +92,10 @@ class MainContract {
          * exit app
          */
         fun switchAccount()
+
+        /**
+         * 位置变化
+         */
+        fun onLocationChanged(message: LocationMessage)
     }
 }

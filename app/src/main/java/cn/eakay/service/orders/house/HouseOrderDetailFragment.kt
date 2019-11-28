@@ -7,11 +7,14 @@ import cn.eakay.service.R
 import cn.eakay.service.adapter.OrderImagesAdapter
 import cn.eakay.service.base.BaseFragment
 import cn.eakay.service.base.Constants
-import cn.eakay.service.beans.PictureOrderMessage
+import cn.eakay.service.beans.messages.PictureOrderMessage
+import cn.eakay.service.beans.messages.RefreshViewMessage
 import cn.eakay.service.utils.StringUtils
 import cn.eakay.service.utils.ToastUtils
 import kotlinx.android.synthetic.main.fragment_order_detail.*
-import java.util.ArrayList
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import java.util.*
 
 /**
  * @packageName: UserService
@@ -44,6 +47,7 @@ class HouseOrderDetailFragment : BaseFragment(), HouseOrderDetailContract.View, 
     override fun bindView() {
         presenter = HouseOrderDetailPresenter()
         presenter.attachView(this)
+        initEvent()
     }
 
     override fun initData() {
@@ -430,15 +434,20 @@ class HouseOrderDetailFragment : BaseFragment(), HouseOrderDetailContract.View, 
             R.id.tv_start_service -> {
                 val content = tv_start_service.text.toString().trim()
                 when {
-                    getString(R.string.catch_to_the_door) == content -> /*赶往上门地点*/
+                    getString(R.string.catch_to_the_door) == content ->
+                        /*赶往上门地点*/
                         presenter.toUserHome(Constants.NUMBER_ZERO)
-                    getString(R.string.start_service) == content -> /*开始服务*/
+                    getString(R.string.start_service) == content ->
+                        /*开始服务*/
                         presenter.startService(Constants.NUMBER_ZERO)
-                    getString(R.string.departure_rescue) == content -> /*前往救援*/
+                    getString(R.string.departure_rescue) == content ->
+                        /*前往救援*/
                         presenter.toUserHome(Constants.NUMBER_ONE)
-                    getString(R.string.start_rescue) == content -> /*开始救援*/
+                    getString(R.string.start_rescue) == content ->
+                        /*开始救援*/
                         presenter.startService(Constants.NUMBER_ONE)
-                    getString(R.string.on_site_service_fee_is_sent_to_the_user).endsWith(content) -> /*输入上门服务费*/
+                    getString(R.string.on_site_service_fee_is_sent_to_the_user).endsWith(content) ->
+                        /*输入上门服务费*/
                         presenter.toEditFee()
                 }
             }
@@ -458,9 +467,20 @@ class HouseOrderDetailFragment : BaseFragment(), HouseOrderDetailContract.View, 
             }
         }
     }
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onOrderStatus(message: RefreshViewMessage?) {
+        if (message == null) {
+            return
+        }
+        val code: Int = message.code
+        if (code == Constants.NUMBER_ZERO) {
+            presenter.getPathLists().clear()
+            presenter.requestOrderInfo()
+        }
+    }
 
     override fun onDestroy() {
+        removeEvent()
         presenter.detachView()
         super.onDestroy()
     }

@@ -1,19 +1,28 @@
 package cn.eakay.service.orders.house
 
+import android.annotation.SuppressLint
+import android.app.Dialog
+import android.content.Intent
 import android.text.TextUtils
 import android.view.View
 import cn.eakay.service.R
-import cn.eakay.service.beans.OrderDetailBean
-import cn.eakay.service.beans.PictureMessage
-import cn.eakay.service.beans.PictureOrderMessage
+import cn.eakay.service.base.Constants
+import cn.eakay.service.beans.messages.PictureMessage
+import cn.eakay.service.beans.messages.PictureOrderMessage
+import cn.eakay.service.beans.messages.RefreshViewMessage
+import cn.eakay.service.beans.response.OrderDetailBean
+import cn.eakay.service.beans.response.WorkBean
 import cn.eakay.service.network.ApiUtils
 import cn.eakay.service.network.listener.ResultListener
 import cn.eakay.service.network.listener.ResultObserver
+import cn.eakay.service.network.transformer.SchedulerProvider
+import cn.eakay.service.second.NeedSecondServiceActivity
 import cn.eakay.service.utils.StringUtils
+import cn.eakay.service.widget.TipsDialog
+import cn.eakay.service.widget.TipsEditDialog
 import com.alibaba.fastjson.JSONObject
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import java.util.ArrayList
+import org.greenrobot.eventbus.EventBus
+import java.util.*
 
 /**
  * @packageName: UserService
@@ -34,8 +43,9 @@ class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
     /**
      * has image upload
      */
-    var isNowUploadPic = false
+    var isNowUploadPic: Boolean = false
 
+    @SuppressLint("CheckResult")
     override fun requestOrderInfo() {
         val activity = view?.getBaseActivity()
         view?.showLoadDialog()
@@ -43,13 +53,12 @@ class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
         params["id"] = view?.getIntentOrderId()
         val body = StringUtils.createBody(params)
         val observable = ApiUtils.instance.service.getOrderDetailInfo(body)
-        observable.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        observable.compose(SchedulerProvider.instance.applySchedulers())
             .subscribe(ResultObserver(object :
                 ResultListener<OrderDetailBean> {
                 override fun success(result: OrderDetailBean) {
                     view?.hintLoadDialog()
-                    val bean = result.getDatas()
+                    bean = result.getDatas()
                     /*订单状态*/
                     val orderStatus = bean?.orderStatus
                     /*订单类型*/
@@ -161,11 +170,48 @@ class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
     }
 
     override fun orderThis() {
+        if (bean == null) {
+            return
+        }
+        view?.showLoadDialog()
+        val params = JSONObject()
+        params["id"] = view?.getIntentOrderId()
+        params["serviceCarId"] = bean?.serviceCarId
+        val body = StringUtils.createBody(params)
+        ApiUtils.instance.service.orderThisOrder(body)
+            .compose(SchedulerProvider.instance.applySchedulers())
+            .subscribe(ResultObserver(object : ResultListener<JSONObject> {
+                override fun success(result: JSONObject) {
+                    view?.hintLoadDialog()
+                    EventBus.getDefault()
+                        .post(RefreshViewMessage(Constants.NUMBER_ZERO))
+                }
 
+                override fun failed(error: Throwable?) {
+                    view?.hintLoadDialog()
+                }
+            }))
     }
 
     override fun showCancelDialog() {
+        val activity = view!!.getBaseActivity()
+        val builder = TipsEditDialog.Builder(activity)
+        builder.setTitle(R.string.fill_in_the_reason_for_the_inability_to_serve)
+        builder.setCanceledOnTouchOutSide(false)
+        builder.setOnDialogClickListener(object : TipsEditDialog.OnDialogClickListener {
+            override fun onConfirmClick(dialog: Dialog?, content: String?, which: Int) {
+                dialog?.dismiss()
+            }
 
+            override fun onCancelClick(dialog: Dialog?, which: Int) {
+                dialog?.dismiss()
+            }
+
+        })
+        val dialog = builder.create()
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
+        dialog.show()
     }
 
     override fun showNaviView() {
@@ -197,6 +243,39 @@ class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
     }
 
     override fun needSecondaryService() {
+        val activity = view!!.getBaseActivity()
+        val lists = getPathLists()
+//        if (lists.isNullOrEmpty()) {
+//            view!!.toast(R.string.please_upload_this_service_image)
+//            return
+//        }
+        view?.showLoadDialog()
+//        val paths = StringUtils.joinString(",", lists)
+        val params = JSONObject()
+        params["id"] = view?.getIntentOrderId()
+        params["serviceImg"] = ""
+        val body = StringUtils.createBody(params)
+        ApiUtils.instance.service.updateOrderOtherInfo(body)
+            .compose(SchedulerProvider.instance.applySchedulers())
+            .subscribe(ResultObserver(object : ResultListener<WorkBean> {
+                override fun success(result: WorkBean) {
+                    view?.hintLoadDialog()
+                    if (!pathList.isNullOrEmpty()) {
+                        pathList!!.clear()
+                    }
+                    val intent = Intent(activity, NeedSecondServiceActivity::class.java)
+                    intent.putExtra(
+                        Constants.KEY_ORDER_ID,
+                        view!!.getIntentOrderId()
+                    )
+                    activity.startActivity(intent)
+                }
+
+                override fun failed(error: Throwable?) {
+                    view?.hintLoadDialog()
+                }
+
+            }))
 
     }
 
@@ -220,6 +299,50 @@ class HouseOrderDetailPresenter : HouseOrderDetailContract.Presenter {
     }
 
     override fun showCashDialog() {
+        val activity = view!!.getBaseActivity()
+        val builder = TipsDialog.Builder(activity)
+        builder.setGravity(TipsDialog.Builder.MESSAGE_CENTER_GRAVITY)
+        builder.setMessage(R.string.received_cash)
+        builder.setCanceledOnTouchOutSide(true)
+        builder.setPositiveButton(R.string.dialog_positive_button_text_1)
+        builder.setNegativeButton(R.string.wrong)
+        builder.setOnDialogClickListener(object : TipsDialog.OnDialogClickListener {
+            override fun onConfirmClick(dialog: Dialog?, which: Int) {
+                dialog?.dismiss()
+//                payByCash()
+                needSecondaryService()
+            }
+
+            override fun onCancelClick(dialog: Dialog?, which: Int) {
+                dialog?.dismiss()
+            }
+        })
+        val dialog = builder.create()
+        dialog.setCanceledOnTouchOutside(true)
+        dialog.setCancelable(false)
+        dialog.show()
+    }
+    /**
+     * 现金支付
+     */
+    private fun payByCash() {
+        val params = JSONObject()
+        params["id"] = view!!.getIntentOrderId()
+        val body = StringUtils.createBody(params)
+        view?.showLoadDialog()
+        ApiUtils.instance.service.payByCash(body)
+            .compose(SchedulerProvider.instance.applySchedulers())
+            .subscribe(ResultObserver(object : ResultListener<WorkBean> {
+                override fun success(result: WorkBean) {
+                    view?.hintLoadDialog()
+                    EventBus.getDefault()
+                        .post(RefreshViewMessage(Constants.NUMBER_ZERO))
+                }
+
+                override fun failed(error: Throwable?) {
+                    view?.hintLoadDialog()
+                }
+            }))
 
     }
 

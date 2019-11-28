@@ -2,8 +2,8 @@ package cn.eakay.service.orders.rescue
 
 import cn.eakay.service.base.BasePresenter
 import cn.eakay.service.base.BaseView
-import cn.eakay.service.beans.PictureMessage
-import cn.eakay.service.beans.PictureOrderMessage
+import cn.eakay.service.beans.messages.PictureMessage
+import cn.eakay.service.beans.messages.PictureOrderMessage
 import java.util.ArrayList
 
 /**

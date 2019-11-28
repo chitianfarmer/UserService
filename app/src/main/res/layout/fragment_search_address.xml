@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/base_activity_bg"
+        android:descendantFocusability="blocksDescendants"
+        android:orientation="vertical">
+
+    <include layout="@layout/layout_search_title" />
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+            <com.baidu.mapapi.map.MapView
+                    android:id="@+id/mapView"
+                    android:layout_marginBottom="@dimen/item_height_ne_30"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/base_activity_bg"
+                    android:clickable="true" />
+
+            <ImageView
+                    android:id="@+id/iv_re_location"
+                    android:layout_width="@dimen/item_height"
+                    android:layout_height="@dimen/item_height"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/item_height_10"
+                    android:background="@drawable/white_radius_bg"
+                    android:padding="@dimen/cui_corners_5"
+                    android:src="@drawable/location" />
+
+            <ImageView
+                    android:id="@+id/iv_marker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/marker_icon" />
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@color/base_activity_bg" />
+    </LinearLayout>
+
+</LinearLayout>

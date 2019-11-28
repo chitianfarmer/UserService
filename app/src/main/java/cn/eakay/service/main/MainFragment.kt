@@ -1,22 +1,27 @@
 package cn.eakay.service.main
 
+import android.Manifest
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import cn.eakay.service.R
 import cn.eakay.service.base.BaseFragment
 import cn.eakay.service.base.Constants
+import cn.eakay.service.beans.messages.LocationMessage
 import cn.eakay.service.utils.ToastUtils
 import cn.eakay.service.widget.EakaySlideToUnLockView
+import cn.eakay.service.widget.LoginDialog
 import com.alibaba.fastjson.JSONObject
 import com.shs.easywebviewsupport.utils.LogUtils
 import kotlinx.android.synthetic.main.fragment_main.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * @packageName: UserService
@@ -35,7 +40,6 @@ class MainFragment : BaseFragment(), MainContract.View, EakaySlideToUnLockView.C
 
     companion object {
         val newInstance = MainFragment()
-        var pageCount = Constants.PAGE_COUNT
     }
 
     override fun bindView() {
@@ -43,7 +47,7 @@ class MainFragment : BaseFragment(), MainContract.View, EakaySlideToUnLockView.C
         presenter.apply {
             presenter.attachView(this@MainFragment)
         }
-
+        initEvent()
     }
 
     override fun initData() {
@@ -82,6 +86,10 @@ class MainFragment : BaseFragment(), MainContract.View, EakaySlideToUnLockView.C
         super.onDestroy()
     }
 
+    override fun onDestroyView() {
+        removeEvent()
+        super.onDestroyView()
+    }
     override fun onSlide(distance: Int) {
         /*滑动的距离*/
         LogUtils.loge("----滑动距离：$distance")
@@ -109,18 +117,24 @@ class MainFragment : BaseFragment(), MainContract.View, EakaySlideToUnLockView.C
     }
 
     override fun pleaseEnableYourLocationService() {
-//判断位置服务有没有开启
-        val builder = AlertDialog.Builder(activity!!)
+        //判断位置服务有没有开启
+        val builder = LoginDialog.Builder(activity!!)
         builder.setMessage(R.string.open_location)
-        builder.setPositiveButton(
-            getString(R.string.to_open)
-        ) { dialog, _ ->
-            dialog.dismiss()
-//            jump2PermissionSettings()
-        }
-        builder.setNegativeButton(
-            R.string.dialog_negative_button_text
-        ) { dialog, _ -> dialog.dismiss() }
+        builder.setGravity(LoginDialog.Builder.MESSAGE_CENTER_GRAVITY)
+
+        builder.setPositiveButton(getString(R.string.to_open))
+        builder.setNegativeButton(R.string.dialog_negative_button_text)
+        builder.setOnDialogClickListener(object : LoginDialog.OnDialogClickListener{
+            override fun onConfirmClick(dialog: Dialog?, which: Int) {
+                dialog?.dismiss()
+                jump2PermissionSettings()
+            }
+
+            override fun onCancelClick(dialog: Dialog?, which: Int) {
+                dialog?.dismiss()
+            }
+
+        })
         val mDialog = builder.create()
         mDialog.setCanceledOnTouchOutside(false)
         mDialog.setCancelable(false)
@@ -128,9 +142,9 @@ class MainFragment : BaseFragment(), MainContract.View, EakaySlideToUnLockView.C
     }
 
     override fun requestLocationPermission() {
-//        val locationPermissions =
-//            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
-//        requestPermission(locationPermissions)
+        val locationPermissions =
+            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+        requestPermission(locationPermissions)
     }
 
     override fun resetUnLock() {
@@ -171,5 +185,9 @@ class MainFragment : BaseFragment(), MainContract.View, EakaySlideToUnLockView.C
             tvTabTitle.text = title
             return tabView
         }
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onLocationChange(message: LocationMessage){
+        presenter.onLocationChanged(message)
     }
 }

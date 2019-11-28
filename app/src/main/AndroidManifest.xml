@@ -1,135 +1,158 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
-          package="cn.eakay.service">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        package="cn.eakay.service">
     <!-- Required  一些系统要求的权限，如访问网络等 -->
-    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>
-    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT"/>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <!-- 访问网络，网络定位需要上网 -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- 用于读取手机当前的状态 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
             android:name="android.permission.WRITE_SETTINGS"
-            tools:ignore="ProtectedPermissions"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
+            tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission
             android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
-            tools:ignore="ProtectedPermissions"/>
+            tools:ignore="ProtectedPermissions" />
     <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!-- 这个权限用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <!-- 这个权限用于访问GPS定位 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <!-- 百度地图定位所需权限 -->
-    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE"/>
-    <uses-permission android:name="android.permission.ACCES_MOCK_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_GPS"/>
+    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
+    <uses-permission android:name="android.permission.ACCES_MOCK_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
     <!-- SDK1.5需要android.permission.GET_TASKS权限判断本程序是否为当前运行的应用? -->
-    <uses-permission android:name="android.permission.GET_TASKS"/>
-    <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <!-- 来电消音 -->
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- 摄影机 -->
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
 
-    <uses-feature android:name="android.hardware.camera"/>
-    <uses-feature android:name="android.hardware.autofocus"/>
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.autofocus" />
     <!-- 智能客服 -->
-    <uses-feature android:name="android.permission.WRITE_SETTINGS"/>
-    <permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL"/>
+    <uses-feature android:name="android.permission.WRITE_SETTINGS" />
+    <permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
     <!--友盟所需权限-->
-    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_ADDED"/>
-    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_CHANGED"/>
-    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_INSTALL"/>
-    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED"/>
-    <uses-permission android:name="android.permission.RESTART_PACKAGES"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_ADDED" />
+    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_CHANGED" />
+    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_INSTALL" />
+    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" />
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!--7.0-8.0下载APK文件自动安装的权限-->
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!--    9.0前台定位的全新啊-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <!--系统弹窗的权限-->
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
     <uses-permission
             android:name="android.permission.READ_LOGS"
-            tools:ignore="ProtectedPermissions"/>
+            tools:ignore="ProtectedPermissions" />
     <uses-permission
             android:name="android.permission.SET_DEBUG_APP"
-            tools:ignore="ProtectedPermissions"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+            tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <supports-screens
             android:anyDensity="true"
             android:largeScreens="true"
             android:normalScreens="false"
             android:resizeable="true"
-            android:smallScreens="true"/>
+            android:smallScreens="true" />
 
-    <application android:allowBackup="true"
-                 android:label="@string/app_name"
-                 android:name=".base.EakayApplication"
-                 android:icon="@mipmap/ic_launcher"
-                 android:networkSecurityConfig="@xml/network_security_config"
-                 android:roundIcon="@mipmap/ic_launcher_round"
-                 android:supportsRtl="true"
-                 android:theme="@style/AppBaseTheme"
-                 tools:replace="android:allowBackup,android:theme"
-                 tools:ignore="GoogleAppIndexingWarning">
+    <application
+            android:name=".base.EakayApplication"
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:networkSecurityConfig="@xml/network_security_config"
+            android:requestLegacyExternalStorage="true"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:supportsRtl="true"
+            android:theme="@style/AppBaseTheme"
+            android:usesCleartextTraffic="true"
+            tools:ignore="GoogleAppIndexingWarning"
+            tools:replace="android:allowBackup,android:theme">
         <!--主界面-->
-        <activity android:name=".main.MainActivity"
-                  android:launchMode="singleTask"
-                  android:configChanges="orientation|keyboardHidden"
-                  android:screenOrientation="portrait"/>
+        <activity
+                android:name=".main.MainActivity"
+                android:configChanges="orientation|keyboardHidden"
+                android:launchMode="singleTask"
+                android:screenOrientation="portrait" />
         <!--登陆界面-->
-        <activity android:name=".sign.SignInActivity"
-                  android:launchMode="singleTask"
-                  android:screenOrientation="portrait"/>
+        <activity
+                android:name=".sign.SignInActivity"
+                android:launchMode="singleTask"
+                android:screenOrientation="portrait" />
         <!--欢迎页-->
-        <activity android:name=".splash.SplashActivity"
-                  android:screenOrientation="portrait"
-                  android:configChanges="orientation|keyboardHidden"
-                  android:theme="@style/SplashTheme">
+        <activity
+                android:name=".splash.SplashActivity"
+                android:configChanges="orientation|keyboardHidden"
+                android:screenOrientation="portrait"
+                android:theme="@style/SplashTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <!--上班界面-->
-        <activity android:name=".work.WorkActivity"
-                  android:launchMode="singleTask"
-                  android:screenOrientation="portrait"/>
+        <activity
+                android:name=".work.WorkActivity"
+                android:launchMode="singleTask"
+                android:screenOrientation="portrait" />
         <!--上门服务订单详情-->
-        <activity android:name=".orders.house.HouseOrderDetailActivity"
-                  android:launchMode="singleTask"
-                  android:screenOrientation="portrait"/>
+        <activity
+                android:name=".orders.house.HouseOrderDetailActivity"
+                android:launchMode="singleTask"
+                android:screenOrientation="portrait" />
         <!--救援订单详情-->
-        <activity android:name=".orders.rescue.RescueOrderDetailActivity"
-                  android:launchMode="singleTask"
-                  android:screenOrientation="portrait"/>
+        <activity
+                android:name=".orders.rescue.RescueOrderDetailActivity"
+                android:launchMode="singleTask"
+                android:screenOrientation="portrait" />
+        <!--二次上门搜索服务地址的页面-->
+        <activity
+                android:name=".address.SearchAddressActivity"
+                android:launchMode="singleTask"
+                android:screenOrientation="portrait" />
+        <!--        需要二次服务-->
+        <activity
+                android:name=".second.NeedSecondServiceActivity"
+                android:launchMode="singleTask"
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="adjustPan" />
 
 
         <!--百度地图正式环境-->
         <meta-data
                 android:name="com.baidu.lbsapi.API_KEY"
-                android:value="KUKAvuNE6gv31FcGu8lOyWcHjaKHtjTG"/>
+                android:value="KUKAvuNE6gv31FcGu8lOyWcHjaKHtjTG" />
         <service
                 android:name="com.baidu.location.f"
                 android:enabled="true"
-                android:process=":remote"/>
+                android:process=":remote" />
         <!--7.0以上的文件权限临时申请-->
         <provider
                 android:name="androidx.core.content.FileProvider"
@@ -138,7 +161,7 @@
                 android:grantUriPermissions="true">
             <meta-data
                     android:name="android.support.FILE_PROVIDER_PATHS"
-                    android:resource="@xml/rc_file_path"/>
+                    android:resource="@xml/rc_file_path" />
         </provider>
     </application>
 </manifest>

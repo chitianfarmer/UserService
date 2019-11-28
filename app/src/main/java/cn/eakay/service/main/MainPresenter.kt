@@ -1,26 +1,31 @@
 package cn.eakay.service.main
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Intent
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import cn.eakay.service.R
 import cn.eakay.service.base.Constants
 import cn.eakay.service.base.EakayApplication
+import cn.eakay.service.beans.messages.LocationMessage
 import cn.eakay.service.network.ApiUtils
 import cn.eakay.service.network.listener.ResultListener
 import cn.eakay.service.network.listener.ResultObserver
+import cn.eakay.service.network.transformer.SchedulerProvider
 import cn.eakay.service.tabs.TabFragment
 import cn.eakay.service.utils.BdLocationHelper
 import cn.eakay.service.utils.PermissionUtils
 import cn.eakay.service.utils.StringUtils
+import cn.eakay.service.widget.LoginDialog
 import cn.eakay.service.work.WorkActivity
 import com.alibaba.fastjson.JSONObject
 import com.baidu.location.BDLocation
+import com.baidu.mapapi.map.MapStatusUpdateFactory
+import com.baidu.mapapi.map.MyLocationData
+import com.baidu.mapapi.model.LatLng
 import com.changyoubao.vipthree.base.LSPUtils
 import com.shs.easywebviewsupport.utils.LogUtils
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import java.util.ArrayList
 
 /**
@@ -32,7 +37,7 @@ import java.util.ArrayList
  * @org: http://www.eakay.cn (芜湖恒天易开软件科技有限公司)
  *
  */
-class MainPresenter : MainContract.Presenter, BdLocationHelper.EakayLocationCallBackListener {
+class MainPresenter : MainContract.Presenter {
 
     private var view: MainContract.View? = null
     private var fragments: ArrayList<Fragment>? = ArrayList()
@@ -40,7 +45,6 @@ class MainPresenter : MainContract.Presenter, BdLocationHelper.EakayLocationCall
 
     override fun attachView(view: MainContract.View) {
         this.view = view
-        BdLocationHelper.instance.setEakayLocationCallBackListener(this)
         startLocation()
     }
 
@@ -49,23 +53,13 @@ class MainPresenter : MainContract.Presenter, BdLocationHelper.EakayLocationCall
         view = null
     }
 
-    override fun onHasLocation(bdLocation: BDLocation) {
-        LogUtils.loge("----定位成功：" + bdLocation.addrStr)
-    }
-
-    override fun onLocationFailed(msg: String) {
-        if (view != null) {
-            view!!.toast(msg)
-        }
-    }
-
     override fun stopLocation() {
-        BdLocationHelper.instance.stopLocation()
+        BdLocationHelper.getInstance().stopLocation()
     }
 
     override fun startLocation() {
         val activity = view!!.getBaseActivity();
-        if (!BdLocationHelper.instance.isLocationEnabled(activity)) {
+        if (!BdLocationHelper.getInstance().isLocationEnabled(activity)) {
             view!!.pleaseEnableYourLocationService()
             return
         }
@@ -78,7 +72,7 @@ class MainPresenter : MainContract.Presenter, BdLocationHelper.EakayLocationCall
             view!!.requestLocationPermission()
             return
         }
-        BdLocationHelper.instance.startLocation()
+        BdLocationHelper.getInstance().startLocation()
     }
 
     override fun getRecordsList(): ArrayList<JSONObject> =
@@ -100,19 +94,25 @@ class MainPresenter : MainContract.Presenter, BdLocationHelper.EakayLocationCall
     override fun toSignOutApp() {
         val activity = view!!.getBaseActivity()
         /*切换账户 弹出的确认提示框*/
-        val builder = AlertDialog.Builder(activity)
+        val builder = LoginDialog.Builder(activity)
         builder.setMessage(R.string.determined_to_work)
-        builder.setNegativeButton(
-            R.string.dialog_negative_button_text
-        ) { dialog, _ ->
-            dialog.dismiss()
-            view!!.resetUnLock()
-        }
-        builder.setPositiveButton(R.string.quit_app) { dialog, _ ->
-            dialog.dismiss()
-            /*点击退出后调用退出接口*/
-            switchAccount()
-        }
+        builder.setGravity(LoginDialog.Builder.MESSAGE_CENTER_GRAVITY)
+        builder.setNegativeButton(R.string.dialog_negative_button_text)
+        builder.setPositiveButton(R.string.quit_app)
+        builder.setOnDialogClickListener(object : LoginDialog.OnDialogClickListener {
+            override fun onConfirmClick(dialog: Dialog?, which: Int) {
+                dialog?.dismiss()
+                /*点击退出后调用退出接口*/
+                switchAccount()
+
+            }
+
+            override fun onCancelClick(dialog: Dialog?, which: Int) {
+                dialog?.dismiss()
+                view!!.resetUnLock()
+            }
+
+        })
         val dialog = builder.create()
         dialog.setCanceledOnTouchOutside(false)
         dialog.setCancelable(false)
@@ -120,7 +120,7 @@ class MainPresenter : MainContract.Presenter, BdLocationHelper.EakayLocationCall
     }
 
     override fun initTabs() {
-        val activity = view!!.getBaseActivity() ?: return
+        val activity = view!!.getBaseActivity()
         if (dataEntities!!.size != Constants.NUMBER_ZERO) {
             dataEntities!!.clear()
         }
@@ -128,7 +128,8 @@ class MainPresenter : MainContract.Presenter, BdLocationHelper.EakayLocationCall
             val entity = JSONObject()
             when (i) {
                 Constants.NUMBER_ZERO -> {
-                    entity[Constants.KEY_REFUND_REMARKS] = activity.getString(R.string.pending_reception)
+                    entity[Constants.KEY_REFUND_REMARKS] =
+                        activity.getString(R.string.pending_reception)
                     entity[Constants.KEY_TYPE] = R.drawable.pending_reception
                 }
                 Constants.NUMBER_ONE -> {
@@ -152,17 +153,18 @@ class MainPresenter : MainContract.Presenter, BdLocationHelper.EakayLocationCall
         }
     }
 
+    @SuppressLint("CheckResult")
     override fun switchAccount() {
         view?.showLoadDialog()
         val activity = view?.getBaseActivity()
         val params = JSONObject()
         val body = StringUtils.createBody(params)
         val observable = ApiUtils.instance.service.offLineWork(body)
-        observable.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        observable.compose(SchedulerProvider.instance.applySchedulers())
             .subscribe(ResultObserver(object :
                 ResultListener<JSONObject> {
                 override fun success(result: JSONObject) {
+                    view?.hintLoadDialog()
                     LSPUtils.put(Constants.KEY_IS_USER_WORK, false)
                     EakayApplication.instance?.finishAllActivity()
                     val it = Intent(activity, WorkActivity::class.java)
@@ -180,5 +182,18 @@ class MainPresenter : MainContract.Presenter, BdLocationHelper.EakayLocationCall
                 }
             }
             ))
+    }
+
+    override fun onLocationChanged(message: LocationMessage) {
+        when (message.code) {
+            Constants.NUMBER_ZERO -> {
+                val location = message.bdLocation!!
+                LogUtils.loge("----主页面定位成功：${location.addrStr}")
+
+            }
+            Constants.NUMBER_ONE -> {
+                LogUtils.loge("----主页面定位失败")
+            }
+        }
     }
 }

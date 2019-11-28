@@ -4,12 +4,12 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import cn.eakay.service.R
 import cn.eakay.service.adapter.TabAdapter
 import cn.eakay.service.base.BaseFragment
 import cn.eakay.service.base.Constants
-import cn.eakay.service.beans.TabOrderListBean
+import cn.eakay.service.beans.messages.RefreshViewMessage
+import cn.eakay.service.beans.response.TabOrderListBean
 import cn.eakay.service.utils.ToastUtils
 import cn.eakay.service.utils.ViewUtils
 import cn.eakay.service.widget.ItemDecoration
@@ -19,6 +19,8 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import kotlinx.android.synthetic.main.fragment_tab.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * @packageName: UserService
@@ -50,10 +52,11 @@ class TabFragment : BaseFragment(), TabContract.View, OnRefreshListener, OnLoadM
     override fun bindView() {
         presenter = TabPresenter()
         presenter.attachView(this@TabFragment)
+        initEvent()
     }
 
     override fun initData() {
-        listView.layoutManager = GridLayoutManager(activity!!, Constants.NUMBER_ONE) as RecyclerView.LayoutManager?
+        listView.layoutManager = GridLayoutManager(activity!!, Constants.NUMBER_ONE)
         adapter = TabAdapter(activity!!, presenter.getLists())
         listView.adapter = adapter
         val dropHeader = WaterDropHeader(activity!!)
@@ -121,7 +124,16 @@ class TabFragment : BaseFragment(), TabContract.View, OnRefreshListener, OnLoadM
     override fun stopLoadMore() {
         refreshLayout.finishLoadMore()
     }
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onOrderStatus(message: RefreshViewMessage?) {
+        if (message == null) {
+            return
+        }
+        val code: Int = message.code
+        if (code == Constants.NUMBER_ONE || code == Constants.NUMBER_ZERO) {
+            onRefresh(refreshLayout)
+        }
+    }
     override fun updateListView(arrayList: List<TabOrderListBean.OrderBean>) {
         adapter.notifyDataSetChanged()
     }
@@ -139,4 +151,9 @@ class TabFragment : BaseFragment(), TabContract.View, OnRefreshListener, OnLoadM
     }
 
     override fun getBaseActivity(): Activity = activity!!
+    override fun onDestroy() {
+        removeEvent()
+        presenter?.detachView()
+        super.onDestroy()
+    }
 }

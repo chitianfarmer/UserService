@@ -7,11 +7,14 @@ import cn.eakay.service.R
 import cn.eakay.service.adapter.OrderImagesAdapter
 import cn.eakay.service.base.BaseFragment
 import cn.eakay.service.base.Constants
-import cn.eakay.service.beans.PictureOrderMessage
+import cn.eakay.service.beans.messages.PictureOrderMessage
+import cn.eakay.service.beans.messages.RefreshViewMessage
 import cn.eakay.service.orders.house.HouseOrderDetailFragment
 import cn.eakay.service.utils.StringUtils
 import cn.eakay.service.utils.ToastUtils
 import kotlinx.android.synthetic.main.fragment_order_detail.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.util.ArrayList
 
 /**
@@ -43,6 +46,7 @@ class RescueOrderDetailFragment : BaseFragment(), RescueOrderDetailContract.View
     override fun bindView() {
         presenter = RescueOrderDetailPresenter()
         presenter.attachView(this)
+        initEvent()
     }
 
     override fun initData() {
@@ -396,11 +400,14 @@ class RescueOrderDetailFragment : BaseFragment(), RescueOrderDetailContract.View
             R.id.tv_start_service -> {
                 val content = tv_start_service.text.toString().trim()
                 when {
-                    getString(R.string.departure_rescue) == content -> /*前往救援*/
+                    getString(R.string.departure_rescue) == content ->
+                        /*前往救援*/
                         presenter.toRescueAddress()
-                    getString(R.string.start_rescue) == content -> /*开始救援*/
+                    getString(R.string.start_rescue) == content ->
+                        /*开始救援*/
                         presenter.startRescue()
-                    getString(R.string.on_site_service_fee_is_sent_to_the_user).endsWith(content) -> /*输入上门服务费*/
+                    getString(R.string.on_site_service_fee_is_sent_to_the_user).endsWith(content) ->
+                        /*输入上门服务费*/
                         presenter.toEditFee()
                 }
             }
@@ -421,9 +428,20 @@ class RescueOrderDetailFragment : BaseFragment(), RescueOrderDetailContract.View
         }
     }
 
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onOrderStatus(message: RefreshViewMessage?) {
+        if (message == null) {
+            return
+        }
+        val code: Int = message.code
+        if (code == Constants.NUMBER_ZERO) {
+            presenter.getPathLists().clear()
+            presenter.requestOrderInfo()
+        }
+    }
     override fun onDestroy() {
-        presenter.detachView()
+        removeEvent()
+        presenter?.detachView()
         super.onDestroy()
     }
 }

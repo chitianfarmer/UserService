@@ -5,12 +5,13 @@ import android.content.Intent
 import android.text.TextUtils
 import cn.eakay.service.R
 import cn.eakay.service.base.Constants
-import cn.eakay.service.beans.AuthTokenBean
-import cn.eakay.service.beans.DeviceTokenBean
-import cn.eakay.service.beans.LoginAndRegisterBean
+import cn.eakay.service.beans.response.AuthTokenBean
+import cn.eakay.service.beans.response.DeviceTokenBean
+import cn.eakay.service.beans.response.LoginAndRegisterBean
 import cn.eakay.service.network.ApiUtils
 import cn.eakay.service.network.listener.ResultListener
 import cn.eakay.service.network.listener.ResultObserver
+import cn.eakay.service.network.transformer.SchedulerProvider
 import cn.eakay.service.utils.ErrorManager
 import cn.eakay.service.utils.MD5Utils
 import cn.eakay.service.utils.StringUtils
@@ -87,8 +88,7 @@ class SignInPresenter : SignInContract.Presenter {
         json["deviceToken"] = deviceToken
         val body = StringUtils.createBody(json)
         val signIn = ApiUtils.instance.service.signIn(body)
-        signIn.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        signIn.compose(SchedulerProvider.instance.applySchedulers())
             .subscribe(ResultObserver(
                 object :
                     ResultListener<LoginAndRegisterBean> {
@@ -128,8 +128,7 @@ class SignInPresenter : SignInContract.Presenter {
         json["accessToken"] = ""
         val body = StringUtils.createBody(json)
         val deviceToken = ApiUtils.instance.service.getDeviceToken(body)
-        deviceToken.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        deviceToken.compose(SchedulerProvider.instance.applySchedulers())
             .subscribe(ResultObserver(
                 object :
                     ResultListener<DeviceTokenBean> {
@@ -174,8 +173,7 @@ class SignInPresenter : SignInContract.Presenter {
             MD5Utils.MD5(Constants.APP_KEY + Constants.APP_SECRET + (if (TextUtils.isEmpty(deviceToken)) "" else deviceToken) + timeMillis)
         val body = StringUtils.createBody(param)
         val authToken = ApiUtils.instance.service.refreshLoginAuthToken(body)
-        authToken.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        authToken.compose(SchedulerProvider.instance.applySchedulers())
             .subscribe(ResultObserver(object :
                 ResultListener<AuthTokenBean> {
                 override fun success(result: AuthTokenBean) {

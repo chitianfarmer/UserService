@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_day"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_20"
+        android:layout_gravity="center|bottom"
+        android:gravity="center|bottom"
+        android:text="@string/number_0"
+        android:textColor="@color/text_sign_in_color"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_week"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_20"
+        android:layout_gravity="center|top"
+        android:gravity="center|top"
+        android:text="@string/number_0"
+        android:textColor="@color/text_sign_in_color"
+        android:textSize="10sp" />
+
+    <View
+        android:id="@+id/view_temp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tv_day"
+        android:background="@color/base_activity_bg" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white" />
+
+</LinearLayout>

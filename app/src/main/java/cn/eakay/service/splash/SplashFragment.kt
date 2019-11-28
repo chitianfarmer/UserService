@@ -7,11 +7,12 @@ import android.text.TextUtils
 import cn.eakay.service.R
 import cn.eakay.service.base.BaseFragment
 import cn.eakay.service.base.Constants
-import cn.eakay.service.beans.AuthTokenBean
+import cn.eakay.service.beans.response.AuthTokenBean
 import cn.eakay.service.main.MainActivity
 import cn.eakay.service.network.ApiUtils
 import cn.eakay.service.network.listener.ResultListener
 import cn.eakay.service.network.listener.ResultObserver
+import cn.eakay.service.network.transformer.SchedulerProvider
 import cn.eakay.service.sign.SignInActivity
 import cn.eakay.service.utils.MD5Utils
 import cn.eakay.service.utils.StringUtils
@@ -85,8 +86,7 @@ class SplashFragment : BaseFragment() {
             param["sign"] = MD5Utils.MD5(Constants.APP_KEY + Constants.APP_SECRET + timeMillis)
             val body = StringUtils.createBody(param)
             val authToken = ApiUtils.instance.service.checkNoLoginAuthToken(body)
-            authToken.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+            authToken.compose(SchedulerProvider.instance.applySchedulers())
                 .subscribe(ResultObserver(
                     object :
                         ResultListener<AuthTokenBean> {

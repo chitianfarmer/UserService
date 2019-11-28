@@ -8,9 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import cn.eakay.service.R
-import cn.eakay.service.beans.TabOrderListBean
-import com.alibaba.fastjson.JSONObject
-import java.util.*
+import cn.eakay.service.beans.response.TabOrderListBean
 
 /**
  * @packageName: UserService
@@ -54,18 +52,18 @@ class TabAdapter : RecyclerView.Adapter<TabAdapter.ItemHolder> {
         /*赋值*/
         if (context.getString(R.string.number_0) == type) {
             /*上门服务订单详情*/
-            holder?.iv_order_type.setImageResource(R.drawable.appointment_icon)
-            holder?.tv_service_time.setText(R.string.appointment_service_time)
-            holder?.tv_service_address.setText(R.string.home_service_address)
+            holder?.ivOrderType.setImageResource(R.drawable.appointment_icon)
+            holder?.tvServiceTime.setText(R.string.appointment_service_time)
+            holder?.tvServiceAddress.setText(R.string.home_service_address)
         } else if (context.getString(R.string.number_1) == type) {
             /*救援服务订单详情*/
-            holder?.iv_order_type.setImageResource(R.drawable.rescue_service_icon)
-            holder?.tv_service_time.setText(R.string.rescue_service_time)
-            holder?.tv_service_address.setText(R.string.rescue_service_address)
+            holder?.ivOrderType.setImageResource(R.drawable.rescue_service_icon)
+            holder?.tvServiceTime.setText(R.string.rescue_service_time)
+            holder?.tvServiceAddress.setText(R.string.rescue_service_address)
         }
-        holder?.tv_time.text = if (TextUtils.isEmpty(time)) "" else time
-        holder?.tv_address.text = if (TextUtils.isEmpty(address)) "" else address
-        holder?.tv_order_number.text = if (TextUtils.isEmpty(orderNumber)) "" else orderNumber
+        holder?.tvTime.text = if (TextUtils.isEmpty(time)) "" else time
+        holder?.tvAddress.text = if (TextUtils.isEmpty(address)) "" else address
+        holder?.tvOrderNumber.text = if (TextUtils.isEmpty(orderNumber)) "" else orderNumber
         holder?.itemView.setOnClickListener {
             if (listener != null) {
                 listener?.onClick(position, bean)
@@ -81,13 +79,13 @@ class TabAdapter : RecyclerView.Adapter<TabAdapter.ItemHolder> {
 
 
     class ItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tv_service_time = itemView.findViewById(R.id.tv_service_time) as TextView
-        var tv_time = itemView.findViewById(R.id.tv_time) as TextView
-        var tv_service_address = itemView.findViewById(R.id.tv_service_address) as TextView
-        var tv_address = itemView.findViewById(R.id.tv_address) as TextView
-        var tv_order_number = itemView.findViewById(R.id.tv_order_number) as TextView
-        var tv_order_status = itemView.findViewById(R.id.tv_order_status) as TextView
-        var iv_order_type = itemView.findViewById(R.id.iv_order_type) as ImageView
+        var tvServiceTime = itemView.findViewById(R.id.tv_service_time) as TextView
+        var tvTime = itemView.findViewById(R.id.tv_time) as TextView
+        var tvServiceAddress = itemView.findViewById(R.id.tv_service_address) as TextView
+        var tvAddress = itemView.findViewById(R.id.tv_address) as TextView
+        var tvOrderNumber = itemView.findViewById(R.id.tv_order_number) as TextView
+        var tvOrderStatus = itemView.findViewById(R.id.tv_order_status) as TextView
+        var ivOrderType = itemView.findViewById(R.id.iv_order_type) as ImageView
     }
 
     interface OnItemClickListener {

@@ -4,8 +4,8 @@ import android.text.TextUtils
 import cn.eakay.service.R
 import cn.eakay.service.base.Constants
 import cn.eakay.service.base.EakayApplication
-import cn.eakay.service.beans.ErrorMessages
-import cn.eakay.service.beans.OtherLoginMessage
+import cn.eakay.service.beans.messages.ErrorMessages
+import cn.eakay.service.beans.messages.OtherLoginMessage
 import com.alibaba.fastjson.JSONObject
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -41,8 +41,13 @@ class ErrorInterceptor : Interceptor {
                     )
                 )
             )
-        } else if (Constants.KEY_REQUEST_SUCCESS_CODE != errorCode) {
-            EventBus.getDefault().post(ErrorMessages(errorCode, errorMSg))
+        } else {
+            EventBus.getDefault().post(
+                ErrorMessages(
+                    errorCode,
+                    errorMSg
+                )
+            )
             return response
         }
         return response

@@ -1,14 +1,16 @@
 package cn.eakay.service.work
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.text.TextUtils
 import cn.eakay.service.R
 import cn.eakay.service.base.Constants
-import cn.eakay.service.beans.WorkBean
+import cn.eakay.service.beans.response.WorkBean
 import cn.eakay.service.main.MainActivity
 import cn.eakay.service.network.ApiUtils
 import cn.eakay.service.network.listener.ResultListener
 import cn.eakay.service.network.listener.ResultObserver
+import cn.eakay.service.network.transformer.SchedulerProvider
 import cn.eakay.service.utils.StringUtils
 import com.alibaba.fastjson.JSONObject
 import com.changyoubao.vipthree.base.LSPUtils
@@ -27,6 +29,9 @@ import io.reactivex.schedulers.Schedulers
  */
 class WorkPresenter : WorkContract.Presenter {
     private var view: WorkContract.View? = null
+
+
+    @SuppressLint("CheckResult")
     override fun go2Work() {
         val activity = view?.getBaseActivity()
         val workerFirst = view?.getInputWorkerFirst()
@@ -43,8 +48,7 @@ class WorkPresenter : WorkContract.Presenter {
         params["secondUser"] = if (TextUtils.isEmpty(workerSecond)) "" else workerSecond
         val body = StringUtils.createBody(params)
         val observable = ApiUtils.instance.service.onLineWork(body)
-        observable.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        observable.compose(SchedulerProvider.instance.applySchedulers())
             .subscribe(ResultObserver(object :
                 ResultListener<WorkBean> {
                 override fun success(result: WorkBean) {

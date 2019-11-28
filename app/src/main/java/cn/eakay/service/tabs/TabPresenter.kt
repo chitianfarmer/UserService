@@ -4,10 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import cn.eakay.service.R
 import cn.eakay.service.base.Constants
-import cn.eakay.service.beans.TabOrderListBean
+import cn.eakay.service.beans.response.TabOrderListBean
 import cn.eakay.service.network.ApiUtils
 import cn.eakay.service.network.listener.ResultListener
 import cn.eakay.service.network.listener.ResultObserver
+import cn.eakay.service.network.transformer.SchedulerProvider
 import cn.eakay.service.orders.house.HouseOrderDetailActivity
 import cn.eakay.service.orders.rescue.RescueOrderDetailActivity
 import cn.eakay.service.utils.ErrorManager
@@ -30,7 +31,8 @@ import java.util.ArrayList
 class TabPresenter : TabContract.Presenter {
 
     private var view: TabContract.View? = null
-    private var objectList: MutableList<TabOrderListBean.OrderBean>? = ArrayList<TabOrderListBean.OrderBean>()
+    private var objectList: MutableList<TabOrderListBean.OrderBean>? =
+        ArrayList<TabOrderListBean.OrderBean>()
 
     override fun getLists(): MutableList<TabOrderListBean.OrderBean> {
         if (objectList == null) {
@@ -41,8 +43,8 @@ class TabPresenter : TabContract.Presenter {
 
     @SuppressLint("CheckResult")
     override fun requestData(page: Int) {
-        val type = view?.getIntentType()
-        view?.showLoadDialog()
+        val type = view!!.getIntentType()
+        view!!.showLoadDialog()
         val obj = JSONObject()
         /*待接待 <-3  待完成 <-5，6，7，12  待支付 <-2，8  已取消 <-4，9，10，11，13，14，15  已完成 <-1  订单类型(0:预约单，1：救援单 )*/
         if (type == Constants.NUMBER_ZERO) {
@@ -60,49 +62,47 @@ class TabPresenter : TabContract.Presenter {
         val params = StringUtils.getListParams(page, Constants.PAGE_SIZE, obj)
         val body = StringUtils.createBody(params)
         val orderList = ApiUtils.instance.service.requestOrderList(body)
-        orderList.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        orderList.compose(SchedulerProvider.instance.applySchedulers())
             .subscribe(ResultObserver(object :
                 ResultListener<TabOrderListBean> {
                 override fun success(result: TabOrderListBean) {
+                    view!!.hintLoadDialog()
                     when (result.getErrCode()) {
                         "0" -> {
                             val beans = result.getDatas()
-                            view?.hintLoadDialog()
                             if (beans != null && beans.size != Constants.NUMBER_ZERO) {
-                                view?.showListView()
+                                view!!.showListView()
                                 if (page == Constants.PAGE_COUNT) {
                                     objectList!!.clear()
-                                    view?.stopRefresh()
+                                    view!!.stopRefresh()
                                 } else {
-                                    view?.stopLoadMore()
+                                    view!!.stopLoadMore()
                                 }
                                 objectList!!.addAll(beans)
-                                view?.updateListView(objectList!!)
+                                view!!.updateListView(objectList!!)
                             } else {
                                 if (page == Constants.PAGE_COUNT) {
                                     objectList!!.clear()
-                                    view?.stopRefresh()
-                                    view?.showEmptyView()
+                                    view!!.stopRefresh()
+                                    view!!.showEmptyView()
                                 } else {
-                                    view?.stopLoadMore()
-                                    view?.toast(R.string.already_in_the_end)
+                                    view!!.stopLoadMore()
+                                    view!!.toast(R.string.already_in_the_end)
                                 }
                             }
                         }
                         else -> {
-                            view?.hintLoadDialog()
                             val errCode = result.getErrCode()
                             val errMsg = result.getErrMsg()
                             val resultError = ErrorManager.checkResultError(errCode, errMsg)
                             LogUtils.loge("请求列表信息：$resultError")
                             if (page == Constants.PAGE_COUNT) {
                                 objectList!!.clear()
-                                view?.stopRefresh()
-                                view?.showEmptyView()
+                                view!!.stopRefresh()
+                                view!!.showEmptyView()
                             } else {
-                                view?.stopLoadMore()
-                                view?.toast(R.string.already_in_the_end)
+                                view!!.stopLoadMore()
+                                view!!.toast(R.string.already_in_the_end)
                             }
                         }
                     }
@@ -111,15 +111,15 @@ class TabPresenter : TabContract.Presenter {
                 override fun failed(error: Throwable?) {
                     val message = error?.message
                     LogUtils.loge("请求列表错误信息：$message")
-                    view?.hintLoadDialog()
+                    view!!.hintLoadDialog()
                     if (page == Constants.PAGE_COUNT) {
                         objectList!!.clear()
-                        view?.stopRefresh()
-                        view?.showEmptyView()
-                        view?.toast("请求列表错误信息：$message")
+                        view!!.stopRefresh()
+                        view!!.showEmptyView()
+                        view!!.toast("请求列表错误信息：$message")
                     } else {
-                        view?.stopLoadMore()
-                        view?.toast(R.string.already_in_the_end)
+                        view!!.stopLoadMore()
+                        view!!.toast(R.string.already_in_the_end)
                     }
                 }
             }
@@ -133,8 +133,8 @@ class TabPresenter : TabContract.Presenter {
         val orderId = bean.id
         val intent = Intent()
         intent.setClass(
-            activity,
-            if (activity?.getString(R.string.number_0).equals(orderType)) {
+            activity!!,
+            if (activity?.getString(R.string.number_0) == orderType) {
                 HouseOrderDetailActivity::class.java
             } else {
                 RescueOrderDetailActivity::class.java

@@ -2,8 +2,7 @@ package cn.eakay.service.tabs
 
 import cn.eakay.service.base.BasePresenter
 import cn.eakay.service.base.BaseView
-import cn.eakay.service.beans.TabOrderListBean
-import com.alibaba.fastjson.JSONObject
+import cn.eakay.service.beans.response.TabOrderListBean
 
 /**
  * @packageName: UserService

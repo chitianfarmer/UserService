@@ -12,7 +12,7 @@ import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import cn.eakay.service.R
 import cn.eakay.service.base.Constants
-import cn.eakay.service.beans.PictureOrderMessage
+import cn.eakay.service.beans.messages.PictureOrderMessage
 import com.alibaba.fastjson.JSONObject
 import com.changyoubao.vipthree.base.LSPUtils
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -715,7 +715,12 @@ object StringUtils {
      * 替换的内容
      * 替换的颜色
      */
-    fun getReplaceSpannableString(mContext: Context, details: String, keyWorld: String, colorId: Int): SpannableString {
+    fun getReplaceSpannableString(
+        mContext: Context,
+        details: String,
+        keyWorld: String,
+        colorId: Int
+    ): SpannableString {
         val mSpannableString = SpannableString(details)
         val beginIndex = details.indexOf(keyWorld)
         val endIndex = beginIndex + keyWorld.length
@@ -755,9 +760,10 @@ object StringUtils {
      * @param context
      * @param text
      */
+    @SuppressLint("ObsoleteSdkInt")
     fun copyToClipboard(context: Context, text: String) {
-        if (Build.VERSION.SDK_INT < 11) {
-            val clip = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            var clip = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             // 粘贴
             //clip.getText();
             // 复制
@@ -766,11 +772,10 @@ object StringUtils {
             // 获取系统剪贴板
             val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             // 创建一个剪贴数据集，包含一个普通文本数据条目（需要复制的数据）
-            val clipData = ClipData.newPlainText("EakaySeller", text)
+            val clipData = ClipData.newPlainText("EakayService", text)
             // 把数据集设置（复制）到剪贴板
-            clipboard.primaryClip = clipData
+            clipboard.setPrimaryClip(clipData)
         }
-        //        ToastUtil.showShort("复制成功");
     }
 
     /**
@@ -842,7 +847,8 @@ object StringUtils {
      * @return
      */
     fun checkMobileNumber(mobiles: String): Boolean {
-        val p = compile("^((13[0-9])|(14[5-9])|(15[0-3,5-9])|(16[6])|(17[0-9])|(18[0-9])|(19[0-9]))\\d{8}$")
+        val p =
+            compile("^((13[0-9])|(14[5-9])|(15[0-3,5-9])|(16[6])|(17[0-9])|(18[0-9])|(19[0-9]))\\d{8}$")
         val mat = p.matcher(mobiles)
         return mat.matches()
     }
@@ -906,7 +912,8 @@ object StringUtils {
             return paths
         }
         if (imagePaths.contains(",")) {
-            val split = imagePaths.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            val split =
+                imagePaths.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             for (i in split.indices) {
                 val path = split[i]
                 paths.add(path)
@@ -1149,8 +1156,12 @@ object StringUtils {
                 param[Constants.KEY_REQUEST_ACCESS_TOKEN] = accessToken
             }
         }
-        return RequestBody.create("application/json; charset=utf-8".toMediaTypeOrNull()!!, param.toJSONString())
+        return RequestBody.create(
+            "application/json; charset=utf-8".toMediaTypeOrNull()!!,
+            param.toJSONString()
+        )
     }
+
     /**
      * 连接方法 类似于javascript
      *
@@ -1185,14 +1196,24 @@ object StringUtils {
             return paths
         }
         if (imagePaths.contains(",")) {
-            val split = imagePaths.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            val split =
+                imagePaths.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             for (i in split.indices) {
                 val path = split[i]
-                val message = PictureOrderMessage(Constants.NUMBER_ONE, null, path)
+                val message =
+                    PictureOrderMessage(
+                        Constants.NUMBER_ONE,
+                        null,
+                        path
+                    )
                 paths.add(message)
             }
         } else {
-            val message = PictureOrderMessage(Constants.NUMBER_ONE, null, imagePaths)
+            val message = PictureOrderMessage(
+                Constants.NUMBER_ONE,
+                null,
+                imagePaths
+            )
             paths.add(message)
         }
         return paths

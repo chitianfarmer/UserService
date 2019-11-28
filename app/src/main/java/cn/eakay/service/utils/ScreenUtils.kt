@@ -104,10 +104,10 @@ object ScreenUtils {
         var statusHeight = -1
         try {
             val clazz = Class.forName("com.android.internal.R\$dimen")
-            val `object` = clazz.newInstance()
+            val obj = clazz.newInstance()
             val height = Integer.parseInt(
                 clazz.getField("status_bar_height")
-                    .get(`object`).toString()
+                    .get(obj).toString()
             )
             statusHeight = context.resources.getDimensionPixelSize(height)
         } catch (e: Exception) {
