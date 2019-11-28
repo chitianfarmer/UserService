@@ -15,7 +15,7 @@ import cn.eakay.service.beans.messages.FinishViewMessage
 import cn.eakay.service.beans.messages.LocationMessage
 import cn.eakay.service.beans.response.LocationAddressBean
 import cn.eakay.service.utils.ToastUtils
-import cn.eakay.service.widget.LoginDialog
+import cn.eakay.service.widget.CommonDialog
 import com.baidu.mapapi.map.BaiduMap
 import com.baidu.mapapi.map.MapStatusUpdate
 import com.baidu.mapapi.map.MapStatusUpdateFactory
@@ -110,12 +110,12 @@ class SearchAddressFragment : BaseFragment(), SearchAddressController.View {
      * 请打开定位权限
      */
     override fun pleaseEnableYourLocationService() {
-        val builder = LoginDialog.Builder(activity!!)
+        val builder = CommonDialog.Builder(activity!!)
         builder.setMessage(R.string.open_location)
             .setTitle(R.string.tips)
             .setPositiveButton(R.string.to_open)
             .setNegativeButton(R.string.dialog_negative_button_text)
-            .setOnDialogClickListener(object : LoginDialog.OnDialogClickListener {
+            .setOnDialogClickListener(object : CommonDialog.OnDialogClickListener {
                 override fun onConfirmClick(dialog: Dialog?, which: Int) {
                     dialog?.dismiss()
                     jump2PermissionSettings()

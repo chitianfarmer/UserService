@@ -27,7 +27,7 @@ import cn.eakay.service.sign.SignInActivity
 import cn.eakay.service.utils.*
 import cn.eakay.service.widget.EToolbar
 import cn.eakay.service.widget.LoadDialog
-import cn.eakay.service.widget.LoginDialog
+import cn.eakay.service.widget.CommonDialog
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
@@ -295,11 +295,11 @@ abstract class BaseActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListen
                 //判断用户先前是否拒绝过该权限申请，如果为true，我们可以向用户解释为什么使用该权限
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
                     //这里的dialog可以自定义
-                    val builder = LoginDialog.Builder(this)
+                    val builder = CommonDialog.Builder(this)
                     builder.setMessage(reason)
-                    builder.setGravity(LoginDialog.Builder.MESSAGE_CENTER_GRAVITY)
+                    builder.setGravity(CommonDialog.Builder.MESSAGE_CENTER_GRAVITY)
                     builder.setPositiveButton(R.string.i_know)
-                    builder.setOnDialogClickListener(object : LoginDialog.OnDialogClickListener {
+                    builder.setOnDialogClickListener(object : CommonDialog.OnDialogClickListener {
                         override fun onConfirmClick(dialog: Dialog?, which: Int) {
                             dialog?.dismiss()
                             requestPermission(arrayOf(permission))
@@ -412,12 +412,12 @@ abstract class BaseActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListen
     }
 
     open fun showPermissionSettingsDialog(@NonNull permissions: Array<String>, @NonNull grantResults: IntArray) {
-        val builder = LoginDialog.Builder(this)
+        val builder = CommonDialog.Builder(this)
         builder.setMessage(R.string.lack_of_necessary_permissions)
-        builder.setGravity(LoginDialog.Builder.MESSAGE_CENTER_GRAVITY)
+        builder.setGravity(CommonDialog.Builder.MESSAGE_CENTER_GRAVITY)
         builder.setNegativeButton(R.string.dialog_negative_button_text)
         builder.setPositiveButton(R.string.go_to_set)
-        builder.setOnDialogClickListener(object : LoginDialog.OnDialogClickListener {
+        builder.setOnDialogClickListener(object : CommonDialog.OnDialogClickListener {
             override fun onConfirmClick(dialog: Dialog?, which: Int) {
                 dialog?.dismiss()
                 jump2PermissionSettings()
@@ -489,12 +489,12 @@ abstract class BaseActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListen
         if (isShow!!) {
             return
         }
-        val builder = LoginDialog.Builder(this)
+        val builder = CommonDialog.Builder(this)
         builder.setTitle(R.string.tips)
         builder.setMessage(R.string.reLogin)
-        builder.setGravity(LoginDialog.Builder.MESSAGE_CENTER_GRAVITY)
+        builder.setGravity(CommonDialog.Builder.MESSAGE_CENTER_GRAVITY)
         builder.setPositiveButton(R.string.dialog_positive_button_text)
-        builder.setOnDialogClickListener(object : LoginDialog.OnDialogClickListener {
+        builder.setOnDialogClickListener(object : CommonDialog.OnDialogClickListener {
             override fun onConfirmClick(dialog: Dialog?, which: Int) {
                 dialog?.dismiss()
                 isShow = false

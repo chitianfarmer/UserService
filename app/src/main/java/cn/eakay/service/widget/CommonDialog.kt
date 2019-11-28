@@ -23,7 +23,7 @@ import cn.eakay.service.R
  * @org: http://www.eakay.cn (芜湖恒天易开软件科技有限公司)
  *
  */
-class LoginDialog : Dialog {
+class CommonDialog : Dialog {
 
     constructor(context: Context) : super(context)
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
@@ -154,9 +154,9 @@ class LoginDialog : Dialog {
         /**
          * 创建窗口
          */
-        fun create(): LoginDialog {
+        fun create(): CommonDialog {
             val inflater = LayoutInflater.from(context)
-            val dialog = LoginDialog(context, R.style.Dialog)
+            val dialog = CommonDialog(context, R.style.Dialog)
             val view = inflater.inflate(R.layout.alert_dialog_login, null)
             val llTitle = view.findViewById<LinearLayout>(R.id.ll_title)
             val tvTitle = view.findViewById<TextView>(R.id.tv_title)

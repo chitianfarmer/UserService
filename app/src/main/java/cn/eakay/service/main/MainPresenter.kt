@@ -17,13 +17,9 @@ import cn.eakay.service.tabs.TabFragment
 import cn.eakay.service.utils.BdLocationHelper
 import cn.eakay.service.utils.PermissionUtils
 import cn.eakay.service.utils.StringUtils
-import cn.eakay.service.widget.LoginDialog
+import cn.eakay.service.widget.CommonDialog
 import cn.eakay.service.work.WorkActivity
 import com.alibaba.fastjson.JSONObject
-import com.baidu.location.BDLocation
-import com.baidu.mapapi.map.MapStatusUpdateFactory
-import com.baidu.mapapi.map.MyLocationData
-import com.baidu.mapapi.model.LatLng
 import com.changyoubao.vipthree.base.LSPUtils
 import com.shs.easywebviewsupport.utils.LogUtils
 import java.util.ArrayList
@@ -94,12 +90,12 @@ class MainPresenter : MainContract.Presenter {
     override fun toSignOutApp() {
         val activity = view!!.getBaseActivity()
         /*切换账户 弹出的确认提示框*/
-        val builder = LoginDialog.Builder(activity)
+        val builder = CommonDialog.Builder(activity)
         builder.setMessage(R.string.determined_to_work)
-        builder.setGravity(LoginDialog.Builder.MESSAGE_CENTER_GRAVITY)
+        builder.setGravity(CommonDialog.Builder.MESSAGE_CENTER_GRAVITY)
         builder.setNegativeButton(R.string.dialog_negative_button_text)
         builder.setPositiveButton(R.string.quit_app)
-        builder.setOnDialogClickListener(object : LoginDialog.OnDialogClickListener {
+        builder.setOnDialogClickListener(object : CommonDialog.OnDialogClickListener {
             override fun onConfirmClick(dialog: Dialog?, which: Int) {
                 dialog?.dismiss()
                 /*点击退出后调用退出接口*/

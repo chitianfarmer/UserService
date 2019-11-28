@@ -18,7 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import cn.eakay.service.R
 import cn.eakay.service.widget.LoadDialog
-import cn.eakay.service.widget.LoginDialog
+import cn.eakay.service.widget.CommonDialog
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
@@ -135,11 +135,11 @@ abstract class BaseFragment : Fragment() {
                 //判断用户先前是否拒绝过该权限申请，如果为true，我们可以向用户解释为什么使用该权限
                 if (ActivityCompat.shouldShowRequestPermissionRationale(activity!!, permission)) {
                     //这里的dialog可以自定义
-                    val builder = LoginDialog.Builder(activity!!)
+                    val builder = CommonDialog.Builder(activity!!)
                     builder.setMessage(reason)
-                    builder.setGravity(LoginDialog.Builder.MESSAGE_CENTER_GRAVITY)
+                    builder.setGravity(CommonDialog.Builder.MESSAGE_CENTER_GRAVITY)
                     builder.setPositiveButton(R.string.i_know)
-                    builder.setOnDialogClickListener(object : LoginDialog.OnDialogClickListener {
+                    builder.setOnDialogClickListener(object : CommonDialog.OnDialogClickListener {
                         override fun onConfirmClick(dialog: Dialog?, which: Int) {
                             dialog?.dismiss()
                             requestPermission(arrayOf(permission))
@@ -252,12 +252,12 @@ abstract class BaseFragment : Fragment() {
     }
 
     open fun showPermissionSettingsDialog(@NonNull permissions: Array<String>, @NonNull grantResults: IntArray) {
-        val builder = LoginDialog.Builder(activity!!)
+        val builder = CommonDialog.Builder(activity!!)
         builder.setMessage(R.string.lack_of_necessary_permissions)
-        builder.setGravity(LoginDialog.Builder.MESSAGE_CENTER_GRAVITY)
+        builder.setGravity(CommonDialog.Builder.MESSAGE_CENTER_GRAVITY)
         builder.setNegativeButton(R.string.dialog_negative_button_text)
         builder.setPositiveButton(R.string.go_to_set)
-        builder.setOnDialogClickListener(object : LoginDialog.OnDialogClickListener {
+        builder.setOnDialogClickListener(object : CommonDialog.OnDialogClickListener {
             override fun onConfirmClick(dialog: Dialog?, which: Int) {
                 dialog?.dismiss()
                 jump2PermissionSettings()
